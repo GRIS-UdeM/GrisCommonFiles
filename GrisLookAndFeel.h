@@ -32,11 +32,9 @@
     It's a good idea not to hard code your colours, use the findColour method along with appropriate
     ColourIds so you can set these on a per-component basis.
  */
-struct CustomLookAndFeel    : public LookAndFeel_V3
+struct GrisLookAndFeel    : public LookAndFeel_V3
 {
-    void drawRoundThumb (Graphics& g, const float x, const float y,
-                         const float diameter, const Colour& colour, float outlineThickness)
-    {
+    void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
         const Rectangle<float> a (x, y, diameter, diameter);
         const float halfThickness = outlineThickness * 0.5f;
 
@@ -53,11 +51,8 @@ struct CustomLookAndFeel    : public LookAndFeel_V3
         g.strokePath (p, PathStrokeType (outlineThickness));
     }
 
-    void drawButtonBackground (Graphics& g, Button& button, const Colour& backgroundColour,
-                               bool isMouseOverButton, bool isButtonDown) override
-    {
-        Colour baseColour (backgroundColour.withMultipliedSaturation (button.hasKeyboardFocus (true) ? 1.3f : 0.9f)
-                           .withMultipliedAlpha (button.isEnabled() ? 0.9f : 0.5f));
+    void drawButtonBackground (Graphics& g, Button& button, const Colour& backgroundColour, bool isMouseOverButton, bool isButtonDown) override {
+        Colour baseColour (backgroundColour.withMultipliedSaturation (button.hasKeyboardFocus (true) ? 1.3f : 0.9f).withMultipliedAlpha (button.isEnabled() ? 0.9f : 0.5f));
 
         if (isButtonDown || isMouseOverButton)
             baseColour = baseColour.contrasting (isButtonDown ? 0.2f : 0.1f);
@@ -272,7 +267,7 @@ struct CustomLookAndFeel    : public LookAndFeel_V3
 /** Another really simple look and feel that is very flat and square.
     This inherits from CustomLookAndFeel above for the linear bar and slider backgrounds.
  */
-struct SquareLookAndFeel    : public CustomLookAndFeel
+struct SquareLookAndFeel    : public GrisLookAndFeel
 {
     void drawButtonBackground (Graphics& g, Button& button, const Colour& backgroundColour,
                                bool isMouseOverButton, bool isButtonDown) override
@@ -398,217 +393,3 @@ struct SquareLookAndFeel    : public CustomLookAndFeel
     }
 };
 
-////==============================================================================
-//struct LookAndFeelDemoComponent  : public Component
-//{
-//    LookAndFeelDemoComponent()
-//    {
-//        addAndMakeVisible (rotarySlider);
-//        rotarySlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-//        rotarySlider.setTextBoxStyle (Slider::NoTextBox, false, 0, 0);
-//        rotarySlider.setValue (2.5);
-//
-//        addAndMakeVisible (verticalSlider);
-//        verticalSlider.setSliderStyle (Slider::LinearVertical);
-//        verticalSlider.setTextBoxStyle (Slider::NoTextBox, false, 90, 20);
-//        verticalSlider.setValue (6.2);
-//
-//        addAndMakeVisible (barSlider);
-//        barSlider.setSliderStyle (Slider::LinearBar);
-//        barSlider.setValue (4.5);
-//
-//        addAndMakeVisible (incDecSlider);
-//        incDecSlider.setSliderStyle (Slider::IncDecButtons);
-//        incDecSlider.setRange (0.0, 10.0, 1.0);
-//        incDecSlider.setIncDecButtonsMode (Slider::incDecButtonsDraggable_Horizontal);
-//        incDecSlider.setTextBoxStyle (Slider::TextBoxBelow, false, 90, 20);
-//
-//        addAndMakeVisible (button1);
-//        button1.setButtonText ("Hello World!");
-//
-//        addAndMakeVisible (button2);
-//        button2.setButtonText ("Hello World!");
-//        button2.setClickingTogglesState (true);
-//        button2.setToggleState (true, dontSendNotification);
-//
-//        addAndMakeVisible (button3);
-//        button3.setButtonText ("Hello World!");
-//
-//        addAndMakeVisible (button4);
-//        button4.setButtonText ("Toggle Me");
-//        button4.setToggleState (true, dontSendNotification);
-//
-//        for (int i = 0; i < 3; ++i)
-//        {
-//            TextButton* b = radioButtons.add (new TextButton());
-//            addAndMakeVisible (b);
-//            b->setRadioGroupId (42);
-//            b->setClickingTogglesState (true);
-//            b->setButtonText ("Button " + String (i + 1));
-//
-//            switch (i)
-//            {
-//                case 0:     b->setConnectedEdges (Button::ConnectedOnRight);                            break;
-//                case 1:     b->setConnectedEdges (Button::ConnectedOnRight + Button::ConnectedOnLeft);  break;
-//                case 2:     b->setConnectedEdges (Button::ConnectedOnLeft);                             break;
-//                default:    break;
-//            }
-//        }
-//
-//        radioButtons.getUnchecked (2)->setToggleState (true, dontSendNotification);
-//    }
-//
-//    void resized() override
-//    {
-//        Rectangle<int> area (getLocalBounds().reduced (10));
-//        Rectangle<int> row (area.removeFromTop (100));
-//
-//        rotarySlider.setBounds (row.removeFromLeft (100).reduced (5));
-//        verticalSlider.setBounds (row.removeFromLeft (100).reduced (5));
-//        barSlider.setBounds (row.removeFromLeft (100).reduced (5, 25));
-//        incDecSlider.setBounds (row.removeFromLeft (100).reduced (5, 28));
-//
-//        row = area.removeFromTop (100);
-//        button1.setBounds (row.removeFromLeft (100).reduced (5));
-//
-//        Rectangle<int> row2 (row.removeFromTop (row.getHeight() / 2).reduced (0, 10));
-//        button2.setBounds (row2.removeFromLeft (100).reduced (5, 0));
-//        button3.setBounds (row2.removeFromLeft (100).reduced (5, 0));
-//        button4.setBounds (row2.removeFromLeft (100).reduced (5, 0));
-//
-//        row2 = (row.removeFromTop (row2.getHeight() + 20).reduced (5, 10));
-//
-//        for (int i = 0; i < radioButtons.size(); ++i)
-//            radioButtons.getUnchecked (i)->setBounds (row2.removeFromLeft (100));
-//    }
-//
-//    Slider rotarySlider, verticalSlider, barSlider, incDecSlider;
-//    TextButton button1, button2, button3;
-//    ToggleButton button4;
-//    OwnedArray<TextButton> radioButtons;
-//};
-//
-////==============================================================================
-//class LookAndFeelDemo   : public Component,
-//                          private ComboBox::Listener,
-//                          private Button::Listener
-//{
-//public:
-//    LookAndFeelDemo()
-//    {
-//        descriptionLabel.setMinimumHorizontalScale (1.0f);
-//        descriptionLabel.setText ("This demonstrates how to create a custom look and feel by overriding only the desired methods.\n\n"
-//                                  "Components can have their look and feel individually assigned or they will inherit it from their parent. "
-//                                  "Colours work in a similar way, they can be set for individual components or a look and feel as a whole.",
-//                                  dontSendNotification);
-//
-//        addAndMakeVisible (descriptionLabel);
-//        addAndMakeVisible (lafBox);
-//        addAndMakeVisible (demoComp);
-//
-//        addLookAndFeel (new LookAndFeel_V1(), "LookAndFeel_V1");
-//        addLookAndFeel (new LookAndFeel_V2(), "LookAndFeel_V2");
-//        addLookAndFeel (new LookAndFeel_V3(), "LookAndFeel_V3");
-//
-//        CustomLookAndFeel* claf = new CustomLookAndFeel();
-//        addLookAndFeel (claf, "Custom Look And Feel");
-//        setupCustomLookAndFeelColours (*claf);
-//
-//        SquareLookAndFeel* slaf = new SquareLookAndFeel();
-//        addLookAndFeel (slaf, "Square Look And Feel");
-//        setupSquareLookAndFeelColours (*slaf);
-//
-//        lafBox.addListener (this);
-//        lafBox.setSelectedItemIndex (3);
-//
-//        addAndMakeVisible (randomButton);
-//        randomButton.setButtonText ("Assign Randomly");
-//        randomButton.addListener (this);
-//    }
-//
-//    void paint (Graphics& g) override
-//    {
-//        g.fillAll (Colour::greyLevel (0.4f));
-//    }
-//
-//    void resized() override
-//    {
-//        Rectangle<int> r (getLocalBounds().reduced (10));
-//
-//        demoComp.setBounds (r);
-//
-//        descriptionLabel.setBounds (r.removeFromTop (200));
-//        lafBox.setBounds (r.removeFromTop (22).removeFromLeft (250));
-//        randomButton.setBounds (lafBox.getBounds().withX (lafBox.getRight() + 20).withWidth (140));
-//
-//        demoComp.setBounds (r.withTrimmedTop (10));
-//    }
-//
-//private:
-//    Label descriptionLabel;
-//    ComboBox lafBox;
-//    TextButton randomButton;
-//    OwnedArray<LookAndFeel> lookAndFeels;
-//    LookAndFeelDemoComponent demoComp;
-//
-//    void addLookAndFeel (LookAndFeel* laf, const String& name)
-//    {
-//        lookAndFeels.add (laf);
-//        lafBox.addItem (name, lafBox.getNumItems() + 1);
-//    }
-//
-//    void setupCustomLookAndFeelColours (LookAndFeel& laf)
-//    {
-//        laf.setColour (Slider::thumbColourId, Colour::greyLevel (0.95f));
-//        laf.setColour (Slider::textBoxOutlineColourId, Colours::transparentWhite);
-//        laf.setColour (Slider::rotarySliderFillColourId, Colour (0xff00b5f6));
-//        laf.setColour (Slider::rotarySliderOutlineColourId, Colours::white);
-//
-//        laf.setColour (TextButton::buttonColourId, Colours::white);
-//        laf.setColour (TextButton::textColourOffId, Colour (0xff00b5f6));
-//
-//        laf.setColour (TextButton::buttonOnColourId, laf.findColour (TextButton::textColourOffId));
-//        laf.setColour (TextButton::textColourOnId, laf.findColour (TextButton::buttonColourId));
-//    }
-//
-//    void setupSquareLookAndFeelColours (LookAndFeel& laf)
-//    {
-//        const Colour baseColour (Colours::red);
-//        laf.setColour (Slider::thumbColourId, Colour::greyLevel (0.95f));
-//        laf.setColour (Slider::textBoxOutlineColourId, Colours::transparentWhite);
-//        laf.setColour (Slider::rotarySliderFillColourId, baseColour);
-//        laf.setColour (Slider::rotarySliderOutlineColourId, Colours::white);
-//        laf.setColour (Slider::trackColourId, Colours::black);
-//
-//        laf.setColour (TextButton::buttonColourId, Colours::white);
-//        laf.setColour (TextButton::textColourOffId, baseColour);
-//
-//        laf.setColour (TextButton::buttonOnColourId, laf.findColour (TextButton::textColourOffId));
-//        laf.setColour (TextButton::textColourOnId, laf.findColour (TextButton::buttonColourId));
-//    }
-//
-//    void setAllLookAndFeels (LookAndFeel* laf)
-//    {
-//        for (int i = 0; i < demoComp.getNumChildComponents(); ++i)
-//            if (Component* c = demoComp.getChildComponent (i))
-//                c->setLookAndFeel (laf);
-//    }
-//
-//    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override
-//    {
-//        if (comboBoxThatHasChanged == &lafBox)
-//            setAllLookAndFeels (lookAndFeels[lafBox.getSelectedItemIndex()]);
-//    }
-//
-//    void buttonClicked (Button* b) override
-//    {
-//        if (b == &randomButton)
-//            lafBox.setSelectedItemIndex (Random::getSystemRandom().nextInt (lafBox.getNumItems()));
-//    }
-//
-//    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LookAndFeelDemo)
-//};
-//
-//
-//// This static object will register this demo type in a global list of demos..
-//static JuceDemoType<LookAndFeelDemo> demo ("10 Components: Look And Feel");
