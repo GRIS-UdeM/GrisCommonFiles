@@ -35,9 +35,19 @@
 struct GrisLookAndFeel    : public LookAndFeel_V3
 {
     Font getLabelFont (Label & label) override{
-        //    Font font("Adobe", 20.f);
-        
-         return Font (Font::getDefaultMonospacedFontName(), 12.0f, Font::plain);
+        return Font ("Shree Devanagari 714", 20.0f, Font::plain);
+    }
+
+    Font getComboBoxFont (ComboBox & comboBox) override{
+        return Font ("Shree Devanagari 714", 20.0f, Font::plain);
+    }
+    
+    Font getTextButtonFont (TextButton &, int buttonHeight) override{
+        return Font ("Shree Devanagari 714", 20.0f, Font::plain);
+    }
+
+    Font getMenuBarFont	(MenuBarComponent &, int itemIndex, const String & itemText) override{
+        return Font ("Shree Devanagari 714", 20.0f, Font::plain);
     }
     
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
