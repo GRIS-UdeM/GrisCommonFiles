@@ -196,40 +196,40 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
         }
     }
 
-    void drawLinearSliderBackground (Graphics& g, int x, int y, int width, int height,
-                                     float /*sliderPos*/,
-                                     float /*minSliderPos*/,
-                                     float /*maxSliderPos*/,
-                                     const Slider::SliderStyle /*style*/, Slider& slider) override
-    {
-        const float sliderRadius = getSliderThumbRadius (slider) - 5.0f;
-        Path on, off;
-
-        if (slider.isHorizontal())
-        {
-            const float iy = x + width * 0.5f - sliderRadius * 0.5f;
-            Rectangle<float> r (x - sliderRadius * 0.5f, iy, width + sliderRadius, sliderRadius);
-            const float onW = r.getWidth() * ((float) slider.valueToProportionOfLength (slider.getValue()));
-
-            on.addRectangle (r.removeFromLeft (onW));
-            off.addRectangle (r);
-        }
-        else
-        {
-            const float ix = x + width * 0.5f - sliderRadius * 0.5f;
-            Rectangle<float> r (ix, y - sliderRadius * 0.5f, sliderRadius, height + sliderRadius);
-            const float onH = r.getHeight() * ((float) slider.valueToProportionOfLength (slider.getValue()));
-
-            on.addRectangle (r.removeFromBottom (onH));
-            off.addRectangle (r);
-        }
-
-        g.setColour (slider.findColour (Slider::rotarySliderFillColourId));
-        g.fillPath (on);
-
-        g.setColour (slider.findColour (Slider::trackColourId));
-        g.fillPath (off);
-    }
+    JUCE_COMPILER_WARNING("something about this function is making it so that no background is displayed...")
+//    void drawLinearSliderBackground (Graphics& g, int x, int y, int width, int height,
+//                                     float /*sliderPos*/,
+//                                     float /*minSliderPos*/,
+//                                     float /*maxSliderPos*/,
+//                                     const Slider::SliderStyle /*style*/, Slider& slider) override {
+//        const float sliderRadius = getSliderThumbRadius (slider) - 5.0f;
+//        Path on, off;
+//
+//        if (slider.isHorizontal())
+//        {
+//            const float iy = x + width * 0.5f - sliderRadius * 0.5f;
+//            Rectangle<float> r (x - sliderRadius * 0.5f, iy, width + sliderRadius, sliderRadius);
+//            const float onW = r.getWidth() * ((float) slider.valueToProportionOfLength (slider.getValue()));
+//
+//            on.addRectangle (r.removeFromLeft (onW));
+//            off.addRectangle (r);
+//        }
+//        else
+//        {
+//            const float ix = x + width * 0.5f - sliderRadius * 0.5f;
+//            Rectangle<float> r (ix, y - sliderRadius * 0.5f, sliderRadius, height + sliderRadius);
+//            const float onH = r.getHeight() * ((float) slider.valueToProportionOfLength (slider.getValue()));
+//
+//            on.addRectangle (r.removeFromBottom (onH));
+//            off.addRectangle (r);
+//        }
+//
+//        g.setColour (slider.findColour (Slider::rotarySliderFillColourId));
+//        g.fillPath (on);
+//
+//        g.setColour (slider.findColour (Slider::trackColourId));
+//        g.fillPath (off);
+//    }
 
     void drawRotarySlider (Graphics& g, int x, int y, int width, int height, float sliderPos,
                            float rotaryStartAngle, float rotaryEndAngle, Slider& slider) override
