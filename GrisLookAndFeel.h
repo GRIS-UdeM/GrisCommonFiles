@@ -34,6 +34,12 @@
  */
 struct GrisLookAndFeel    : public LookAndFeel_V3
 {
+    Font getLabelFont (Label & label) override{
+        //    Font font("Adobe", 20.f);
+        
+         return Font (Font::getDefaultMonospacedFontName(), 12.0f, Font::plain);
+    }
+    
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
         const Rectangle<float> a (x, y, diameter, diameter);
         const float halfThickness = outlineThickness * 0.5f;
@@ -121,10 +127,7 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
         }
     }
 
-    void drawLinearSliderThumb (Graphics& g, int x, int y, int width, int height,
-                                float sliderPos, float minSliderPos, float maxSliderPos,
-                                const Slider::SliderStyle style, Slider& slider) override
-    {
+    void drawLinearSliderThumb (Graphics& g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider& slider) override {
         const float sliderRadius = (float) (getSliderThumbRadius (slider) - 2);
 
         bool isDownOrDragging = slider.isEnabled() && (slider.isMouseOverOrDragging() || slider.isMouseButtonDown());
@@ -161,14 +164,10 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
         }
     }
 
-    void drawLinearSlider (Graphics& g, int x, int y, int width, int height,
-                           float sliderPos, float minSliderPos, float maxSliderPos,
-                           const Slider::SliderStyle style, Slider& slider) override
-    {
+    void drawLinearSlider (Graphics& g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider& slider) override {
         g.fillAll (slider.findColour (Slider::backgroundColourId));
 
-        if (style == Slider::LinearBar || style == Slider::LinearBarVertical)
-        {
+        if (style == Slider::LinearBar || style == Slider::LinearBarVertical) {
             const float fx = (float) x, fy = (float) y, fw = (float) width, fh = (float) height;
 
             Path p;
