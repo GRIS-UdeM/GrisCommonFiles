@@ -24,6 +24,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+static const Colour s_grisBackgroundColour = Colours::lightblue;
+
 
 //==============================================================================
 /** Custom Look And Feel subclasss.
