@@ -24,9 +24,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-static const Colour s_grisBackgroundColour = Colours::lightblue;
-
-
 //==============================================================================
 /** Custom Look And Feel subclasss.
 
@@ -50,6 +47,10 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
 
     Font getMenuBarFont	(MenuBarComponent &, int itemIndex, const String & itemText) override{
         return Font ("Shree Devanagari 714", 20.0f, Font::plain);
+    }
+    
+    Colour getGrisBackgroundColor(){
+        return Colours::lightblue;
     }
     
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
