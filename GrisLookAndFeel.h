@@ -60,8 +60,8 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
         Path p;
         p.addEllipse (x + halfThickness, y + halfThickness, diameter - outlineThickness, diameter - outlineThickness);
 
-//        const DropShadow ds (Colours::black, 1, Point<int> (0, 0));
-//        ds.drawForPath (g, p);
+        const DropShadow ds (Colours::black, 1, Point<int> (0, 0));
+        ds.drawForPath (g, p);
 
         g.setColour (colour);
         g.fillPath (p);
@@ -208,70 +208,57 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
         }
     }
 
-    JUCE_COMPILER_WARNING("something about this function is making it so that no background is displayed...")
-//    void drawLinearSliderBackground (Graphics& g, int x, int y, int width, int height,
-//                                     float /*sliderPos*/,
-//                                     float /*minSliderPos*/,
-//                                     float /*maxSliderPos*/,
-//                                     const Slider::SliderStyle /*style*/, Slider& slider) override {
-//        const float sliderRadius = getSliderThumbRadius (slider) - 5.0f;
-//        Path on, off;
-//
-//        if (slider.isHorizontal())
-//        {
-//            const float iy = x + width * 0.5f - sliderRadius * 0.5f;
-//            Rectangle<float> r (x - sliderRadius * 0.5f, iy, width + sliderRadius, sliderRadius);
-//            const float onW = r.getWidth() * ((float) slider.valueToProportionOfLength (slider.getValue()));
-//
-//            on.addRectangle (r.removeFromLeft (onW));
-//            off.addRectangle (r);
-//        }
-//        else
-//        {
-//            const float ix = x + width * 0.5f - sliderRadius * 0.5f;
-//            Rectangle<float> r (ix, y - sliderRadius * 0.5f, sliderRadius, height + sliderRadius);
-//            const float onH = r.getHeight() * ((float) slider.valueToProportionOfLength (slider.getValue()));
-//
-//            on.addRectangle (r.removeFromBottom (onH));
-//            off.addRectangle (r);
-//        }
-//
-//        g.setColour (slider.findColour (Slider::rotarySliderFillColourId));
-//        g.fillPath (on);
-//
-//        g.setColour (slider.findColour (Slider::trackColourId));
-//        g.fillPath (off);
-//    }
-
-    void drawRotarySlider (Graphics& g, int x, int y, int width, int height, float sliderPos,
-                           float rotaryStartAngle, float rotaryEndAngle, Slider& slider) override
-    {
-        const float radius = jmin (width / 2, height / 2) - 2.0f;
-        const float centreX = x + width * 0.5f;
-        const float centreY = y + height * 0.5f;
-        const float rx = centreX - radius;
-        const float ry = centreY - radius;
-        const float rw = radius * 2.0f;
-        const float angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
-        const bool isMouseOver = slider.isMouseOverOrDragging() && slider.isEnabled();
-
-        if (slider.isEnabled())
-            g.setColour (slider.findColour (Slider::rotarySliderFillColourId).withAlpha (isMouseOver ? 1.0f : 0.7f));
-        else
-            g.setColour (Colour (0x80808080));
-
-        {
-            Path filledArc;
-            filledArc.addPieSegment (rx, ry, rw, rw, rotaryStartAngle, angle, 0.0);
-            g.fillPath (filledArc);
+    void drawLinearSliderBackground (Graphics& g, int x, int y, int width, int height, float /*sliderPos*/, float /*minSliderPos*/, float /*maxSliderPos*/, const Slider::SliderStyle /*style*/, Slider& slider) override {
+        const float sliderRadius = getSliderThumbRadius (slider) - 5.0f;
+        Path on, off;
+        if (slider.isHorizontal()) {
+            const float iy = y + height * 0.5f - sliderRadius * 0.5f;
+            Rectangle<float> r (x - sliderRadius * 0.5f, iy, width + sliderRadius, sliderRadius);
+            const float onW = r.getWidth() * ((float) slider.valueToProportionOfLength (slider.getValue()));
+            on.addRectangle (r.removeFromLeft (onW));
+            off.addRectangle (r);
+        } else {
+            const float ix = x + width * 0.5f - sliderRadius * 0.5f;
+            Rectangle<float> r (ix, y - sliderRadius * 0.5f, sliderRadius, height + sliderRadius);
+            const float onH = r.getHeight() * ((float) slider.valueToProportionOfLength (slider.getValue()));
+            on.addRectangle (r.removeFromBottom (onH));
+            off.addRectangle (r);
         }
-
-        {
-            const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
-            Path outlineArc;
-            outlineArc.addPieSegment (rx, ry, rw, rw, rotaryStartAngle, rotaryEndAngle, 0.0);
-            g.strokePath (outlineArc, PathStrokeType (lineThickness));
-        }
+        g.setColour (slider.findColour (Slider::rotarySliderFillColourId));
+        g.fillPath (on);
+        g.setColour (slider.findColour (Slider::trackColourId));
+        g.fillPath (off);
     }
+    
+
+//    //we don't use those, so far
+//    void drawRotarySlider (Graphics& g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, Slider& slider) override {
+//        const float radius = jmin (width / 2, height / 2) - 2.0f;
+//        const float centreX = x + width * 0.5f;
+//        const float centreY = y + height * 0.5f;
+//        const float rx = centreX - radius;
+//        const float ry = centreY - radius;
+//        const float rw = radius * 2.0f;
+//        const float angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
+//        const bool isMouseOver = slider.isMouseOverOrDragging() && slider.isEnabled();
+//
+//        if (slider.isEnabled())
+//            g.setColour (slider.findColour (Slider::rotarySliderFillColourId).withAlpha (isMouseOver ? 1.0f : 0.7f));
+//        else
+//            g.setColour (Colour (0x80808080));
+//
+//        {
+//            Path filledArc;
+//            filledArc.addPieSegment (rx, ry, rw, rw, rotaryStartAngle, angle, 0.0);
+//            g.fillPath (filledArc);
+//        }
+//
+//        {
+//            const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
+//            Path outlineArc;
+//            outlineArc.addPieSegment (rx, ry, rw, rw, rotaryStartAngle, rotaryEndAngle, 0.0);
+//            g.strokePath (outlineArc, PathStrokeType (lineThickness));
+//        }
+//    }
 };
 
