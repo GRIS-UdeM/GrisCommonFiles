@@ -84,8 +84,7 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
         const float width  = button.getWidth() - 1.0f;
         const float height = button.getHeight() - 1.0f;
 
-        if (width > 0 && height > 0)
-        {
+        if (width > 0 && height > 0) {
             const float cornerSize = jmin (15.0f, jmin (width, height) * 0.45f);
             const float lineThickness = cornerSize * 0.1f;
             const float halfThickness = lineThickness * 0.5f;
@@ -104,60 +103,41 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
             g.setColour (baseColour);
             g.fillPath (outline);
 
-            if (! button.getToggleState())
-            {
+            if (! button.getToggleState()) {
                 g.setColour (outlineColour);
                 g.strokePath (outline, PathStrokeType (lineThickness));
             }
         }
     }
 
-    void drawTickBox (Graphics& g, Component& component,
-                      float x, float y, float w, float h,
-                      bool ticked,
-                      bool isEnabled,
-                      bool isMouseOverButton,
-                      bool isButtonDown) override
-    {
+    void drawTickBox (Graphics& g, Component& component, float x, float y, float w, float h, bool ticked, bool isEnabled, bool isMouseOverButton, bool isButtonDown) override {
         const float boxSize = w * 0.7f;
-
         bool isDownOrDragging = component.isEnabled() && (component.isMouseOverOrDragging() || component.isMouseButtonDown());
-        const Colour colour (component.findColour (TextButton::buttonColourId).withMultipliedSaturation ((component.hasKeyboardFocus (false) || isDownOrDragging) ? 1.3f : 0.9f)
-                             .withMultipliedAlpha (component.isEnabled() ? 1.0f : 0.7f));
+        const Colour colour (component.findColour (TextButton::buttonColourId).withMultipliedSaturation ((component.hasKeyboardFocus (false) || isDownOrDragging) ? 1.3f : 0.9f).withMultipliedAlpha (component.isEnabled() ? 1.0f : 0.7f));
 
-        drawRoundThumb (g, x, y + (h - boxSize) * 0.5f, boxSize, colour,
-                        isEnabled ? ((isButtonDown || isMouseOverButton) ? 1.1f : 0.5f) : 0.3f);
+        drawRoundThumb (g, x, y + (h - boxSize) * 0.5f, boxSize, colour, isEnabled ? ((isButtonDown || isMouseOverButton) ? 1.1f : 0.5f) : 0.3f);
 
-        if (ticked)
-        {
+        if (ticked) {
             const Path tick (LookAndFeel_V2::getTickShape (6.0f));
             g.setColour (isEnabled ? findColour (TextButton::buttonOnColourId) : Colours::grey);
-
             const float scale = 9.0f;
-            const AffineTransform trans (AffineTransform::scale (w / scale, h / scale)
-                                             .translated (x - 2.5f, y + 1.0f));
+            const AffineTransform trans (AffineTransform::scale (w / scale, h / scale).translated (x - 2.5f, y + 1.0f));
             g.fillPath (tick, trans);
         }
     }
 
     void drawLinearSliderThumb (Graphics& g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider& slider) override {
         const float sliderRadius = (float) (getSliderThumbRadius (slider) - 2);
-
         bool isDownOrDragging = slider.isEnabled() && (slider.isMouseOverOrDragging() || slider.isMouseButtonDown());
-        Colour knobColour (slider.findColour (Slider::thumbColourId).withMultipliedSaturation ((slider.hasKeyboardFocus (false) || isDownOrDragging) ? 1.3f : 0.9f)
-                           .withMultipliedAlpha (slider.isEnabled() ? 1.0f : 0.7f));
+        Colour knobColour (slider.findColour (Slider::thumbColourId).withMultipliedSaturation ((slider.hasKeyboardFocus (false) || isDownOrDragging) ? 1.3f : 0.9f).withMultipliedAlpha (slider.isEnabled() ? 1.0f : 0.7f));
 
-        if (style == Slider::LinearHorizontal || style == Slider::LinearVertical)
-        {
+        if (style == Slider::LinearHorizontal || style == Slider::LinearVertical) {
             float kx, ky;
 
-            if (style == Slider::LinearVertical)
-            {
+            if (style == Slider::LinearVertical) {
                 kx = x + width * 0.5f;
                 ky = sliderPos;
-            }
-            else
-            {
+            } else {
                 kx = sliderPos;
                 ky = y + height * 0.5f;
             }
@@ -169,9 +149,7 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
                             ky - sliderRadius,
                             sliderRadius * 2.0f,
                             knobColour, outlineThickness);
-        }
-        else
-        {
+        } else {
             // Just call the base class for the demo
             LookAndFeel_V2::drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
         }
@@ -200,9 +178,7 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
 
             const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
             g.drawRect (slider.getLocalBounds().toFloat(), lineThickness);
-        }
-        else
-        {
+        } else {
             drawLinearSliderBackground (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
             drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
         }
