@@ -73,9 +73,9 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
     void drawButtonBackground (Graphics& g, Button& button, const Colour& backgroundColour, bool isMouseOverButton, bool isButtonDown) override {
         Colour baseColour (backgroundColour.withMultipliedSaturation (button.hasKeyboardFocus (true) ? 1.3f : 0.9f).withMultipliedAlpha (button.isEnabled() ? 0.9f : 0.5f));
 
-        if (isButtonDown || isMouseOverButton)
+        if (isButtonDown || isMouseOverButton){
             baseColour = baseColour.contrasting (isButtonDown ? 0.2f : 0.1f);
-
+        }
         const bool flatOnLeft   = button.isConnectedOnLeft();
         const bool flatOnRight  = button.isConnectedOnRight();
         const bool flatOnTop    = button.isConnectedOnTop();
@@ -97,9 +97,7 @@ struct GrisLookAndFeel    : public LookAndFeel_V3
                                          ! (flatOnLeft  || flatOnBottom),
                                          ! (flatOnRight || flatOnBottom));
 
-            const Colour outlineColour (button.findColour (button.getToggleState() ? TextButton::textColourOnId
-                                                                                   : TextButton::textColourOffId));
-
+            const Colour outlineColour (button.findColour (button.getToggleState() ? TextButton::textColourOnId : TextButton::textColourOffId));
             g.setColour (baseColour);
             g.fillPath (outline);
 
