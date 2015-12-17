@@ -31,26 +31,44 @@
     It's a good idea not to hard code your colours, use the findColour method along with appropriate
     ColourIds so you can set these on a per-component basis.
  */
-struct GrisLookAndFeel    : public LookAndFeel_V3
-{
+struct GrisLookAndFeel    : public LookAndFeel_V3 {
+    
+    Font m_Font;
+    String m_FontName;
+    float m_fFontSize;
+    
+    GrisLookAndFeel(){
+//        m_FontName = "Shree Devanagari 714";
+        m_FontName = "Apple SD Gothic Neo";
+        m_fFontSize = 16.0f;
+        
+//        m_FontName = "Eurostile";
+//        m_FontName = "Optima";
+        m_Font = Font(m_FontName, m_fFontSize, Font::plain);
+    }
+    
     Font getLabelFont (Label & label) override{
-        return Font ("Shree Devanagari 714", 20.0f, Font::plain);
+        return m_Font;
     }
 
     Font getComboBoxFont (ComboBox & comboBox) override{
-        return Font ("Shree Devanagari 714", 20.0f, Font::plain);
+        return m_Font;
     }
     
     Font getTextButtonFont (TextButton &, int buttonHeight) override{
-        return Font ("Shree Devanagari 714", 20.0f, Font::plain);
+        return m_Font;
     }
 
     Font getMenuBarFont	(MenuBarComponent &, int itemIndex, const String & itemText) override{
-        return Font ("Shree Devanagari 714", 20.0f, Font::plain);
+        return m_Font;
     }
     
     Colour getGrisBackgroundColor(){
         return Colours::lightblue;
+    }
+    
+    String getFontName(){
+        return m_FontName;
     }
     
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
