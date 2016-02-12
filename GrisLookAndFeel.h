@@ -63,7 +63,7 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
         return m_Font;
     }
     
-    Colour getGrisBackgroundColor(){
+    Colour getBackgroundColor(){
         return Colours::lightblue;
     }
     
