@@ -23,6 +23,18 @@
 */
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#if WIN32
+#include <windows.h>
+#endif
+
+std::string ExePath() 
+{
+    char buffer[MAX_PATH];
+    GetModuleFileName( NULL, buffer, MAX_PATH );
+    std::string::size_type pos = std::string( buffer ).find_last_of( "\\/" );
+    return std::string( buffer ).substr( 0, pos);
+}
+
 
 //==============================================================================
 /** Custom Look And Feel subclasss.
@@ -39,19 +51,23 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
     
     GrisLookAndFeel(){
 #if WIN32
-		//put this somewhere else
-		//#include <windows.h>
-		//fix this line
-		//AddFontResourceEx((ExePath() + "\\data\\Fonts\\open-sans\\OpenSans-Bold.ttf").c_str(), FR_PRIVATE, NULL);
-#endif
-//        m_FontName = "Shree Devanagari 714";
-        m_FontName = "Apple SD Gothic Neo";
+		AddFontResourceEx((ExePath() + "\\Fonts\\Bebas\\BEBAS___.ttf").c_str(), FR_PRIVATE, NULL);
+		m_FontName = "BEBAS___";
         m_fFontSize = 16.0f;
-        
+		m_Font = Font(m_FontName, m_fFontSize, Font::plain);
+#elif
+//        m_FontName = "Shree Devanagari 714";
 //        m_FontName = "Eurostile";
 //        m_FontName = "Optima";
+		m_FontName = "Apple SD Gothic Neo";
+        m_fFontSize = 16.0f;
         m_Font = Font(m_FontName, m_fFontSize, Font::plain);
+#endif
     }
+
+	~GrisLookAndFeel(){
+		RemoveFontResourceEx((ExePath() + "\\Fonts\\Bebas\\BEBAS___.ttf").c_str(), FR_PRIVATE, NULL);
+	}
     
     Font getLabelFont (Label & label) override{
         return m_Font;
@@ -78,7 +94,7 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
     }
     
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
-        const Rectangle<float> a (x, y, diameter, diameter);
+        const juce::Rectangle<float> a (x, y, diameter, diameter);
         const float halfThickness = outlineThickness * 0.5f;
 
         Path p;
@@ -211,13 +227,13 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
         Path on, off;
         if (slider.isHorizontal()) {
             const float iy = y + height * 0.5f - sliderRadius * 0.5f;
-            Rectangle<float> r (x - sliderRadius * 0.5f, iy, width + sliderRadius, sliderRadius);
+            juce::Rectangle<float> r (x - sliderRadius * 0.5f, iy, width + sliderRadius, sliderRadius);
             const float onW = r.getWidth() * ((float) slider.valueToProportionOfLength (slider.getValue()));
             on.addRectangle (r.removeFromLeft (onW));
             off.addRectangle (r);
         } else {
             const float ix = x + width * 0.5f - sliderRadius * 0.5f;
-            Rectangle<float> r (ix, y - sliderRadius * 0.5f, sliderRadius, height + sliderRadius);
+            juce::Rectangle<float> r (ix, y - sliderRadius * 0.5f, sliderRadius, height + sliderRadius);
             const float onH = r.getHeight() * ((float) slider.valueToProportionOfLength (slider.getValue()));
             on.addRectangle (r.removeFromBottom (onH));
             off.addRectangle (r);
