@@ -38,6 +38,12 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
     float m_fFontSize;
     
     GrisLookAndFeel(){
+#if WIN32
+		//put this somewhere else
+		//#include <windows.h>
+		//fix this line
+		//AddFontResourceEx((ExePath() + "\\data\\Fonts\\open-sans\\OpenSans-Bold.ttf").c_str(), FR_PRIVATE, NULL);
+#endif
 //        m_FontName = "Shree Devanagari 714";
         m_FontName = "Apple SD Gothic Neo";
         m_fFontSize = 16.0f;
