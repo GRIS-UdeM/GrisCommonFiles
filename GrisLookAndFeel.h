@@ -25,15 +25,14 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #if WIN32
 #include <windows.h>
-#endif
-
-std::string ExePath() 
+std::string ExePath()
 {
     char buffer[MAX_PATH];
     GetModuleFileName( NULL, buffer, MAX_PATH );
     std::string::size_type pos = std::string( buffer ).find_last_of( "\\/" );
     return std::string( buffer ).substr( 0, pos);
 }
+#endif
 
 
 //==============================================================================
@@ -55,7 +54,7 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
 		m_FontName = "BEBAS___";
         m_fFontSize = 16.0f;
 		m_Font = Font(m_FontName, m_fFontSize, Font::plain);
-#elif
+#else
 //        m_FontName = "Shree Devanagari 714";
 //        m_FontName = "Eurostile";
 //        m_FontName = "Optima";
@@ -66,7 +65,9 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
     }
 
 	~GrisLookAndFeel(){
+#if WIN32
 		RemoveFontResourceEx((ExePath() + "\\Fonts\\Bebas\\BEBAS___.ttf").c_str(), FR_PRIVATE, NULL);
+#endif
 	}
     
     Font getLabelFont (Label & label) override{
