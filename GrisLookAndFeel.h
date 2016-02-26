@@ -62,6 +62,7 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
         m_FontName = "Charcoal CY";
         m_fFontSize = 16.0f;
         m_Font = Font(m_FontName, m_fFontSize, Font::plain);
+
 #endif
     }
 
@@ -88,8 +89,15 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
     }
     
     Colour getBackgroundColor(){
-//        return Colours::lightblue;
-        return Colour(0, 102, 255);
+//        return Colours::darkblue;
+//        return Colour(0, 102, 255);
+//        return Colour(51, 133, 255);
+        return Colours::dodgerblue;
+    }
+    
+    Colour getFontColour(){
+//        return Colours::whitesmoke;
+        return Colours::azure;
     }
     
     String getFontName(){
