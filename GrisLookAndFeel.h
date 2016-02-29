@@ -95,6 +95,13 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
         return Colours::dodgerblue;
     }
     
+    Colour getFieldColor(){
+        //        return Colours::darkblue;
+        //        return Colour(0, 102, 255);
+        //        return Colour(51, 133, 255);
+        return Colours::dodgerblue;
+    }
+    
     Colour getFontColour(){
 //        return Colours::whitesmoke;
         return Colours::azure;
