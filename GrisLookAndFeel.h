@@ -22,6 +22,10 @@
   ==============================================================================
 */
 
+#ifndef GRISLOOKANDFEEL_H_INCLUDED
+#define GRISLOOKANDFEEL_H_INCLUDED
+
+
 #include "../JuceLibraryCode/JuceHeader.h"
 #if WIN32
 #include <windows.h>
@@ -48,19 +52,24 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
     String m_FontName;
     float m_fFontSize;
     
+    Colour m_BackGroundAndFieldColor;
+    
     GrisLookAndFeel(){
+        
+        m_BackGroundAndFieldColor = Colours::darkgrey;
+        
 #if WIN32
 		AddFontResourceEx((ExePath() + "\\Fonts\\Bebas\\BEBAS___.ttf").c_str(), FR_PRIVATE, NULL);
 		m_FontName = "BEBAS___";
         m_fFontSize = 16.0f;
 		m_Font = Font(m_FontName, m_fFontSize, Font::plain);
 #else
-//        m_FontName = "Shree Devanagari 714";
+        m_FontName = "Shree Devanagari 714";
 //        m_FontName = "Eurostile";
 //        m_FontName = "Optima";
 //		m_FontName = "Apple SD Gothic Neo";
-        m_FontName = "Charcoal CY";
-        m_fFontSize = 16.0f;
+//        m_FontName = "Charcoal CY";
+        m_fFontSize = 17.0f;
         m_Font = Font(m_FontName, m_fFontSize, Font::plain);
 
 #endif
@@ -92,19 +101,21 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
 //        return Colours::darkblue;
 //        return Colour(0, 102, 255);
 //        return Colour(51, 133, 255);
-        return Colours::dodgerblue;
+//        return Colours::dodgerblue;
+        return m_BackGroundAndFieldColor;
     }
     
     Colour getFieldColor(){
         //        return Colours::darkblue;
         //        return Colour(0, 102, 255);
         //        return Colour(51, 133, 255);
-        return Colours::dodgerblue;
+//        return Colours::dodgerblue;
+        return m_BackGroundAndFieldColor;
     }
     
     Colour getFontColour(){
-//        return Colours::whitesmoke;
-        return Colours::azure;
+        return Colours::whitesmoke;
+//        return Colours::azure;
     }
     
     String getFontName(){
@@ -293,4 +304,6 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
 //        }
 //    }
 };
+
+#endif
 
