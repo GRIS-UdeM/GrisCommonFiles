@@ -40,24 +40,17 @@
 struct GrisLookAndFeel    : public LookAndFeel_V3 {
     
     Font m_Font;
-    String m_FontName;
     float m_fFontSize;
-    
     Colour m_BackGroundAndFieldColor;
     
     GrisLookAndFeel(){
         
         m_BackGroundAndFieldColor = Colours::darkgrey;
-        
-//        m_FontName = "Shree Devanagari 714";
-//        m_FontName = "Eurostile";
-//        m_FontName = "Optima";
-//		m_FontName = "Apple SD Gothic Neo";
-//        m_FontName = "Charcoal CY";
-        
+
         m_Font = Font(juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize));
-        m_Font.setHeight(10.f);
-        
+        m_fFontSize = 10.f;
+        m_Font.setHeight(m_fFontSize);
+      
 
     }
 
@@ -100,11 +93,17 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
         return Colours::whitesmoke;
 //        return Colours::azure;
     }
+
+Typeface::Ptr getTypefaceForFont (const Font & font) override{
+    return juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize);
+}
+
+
     
-    String getFontName(){
-        return m_FontName;
-    }
-    
+//    String getFontName(){
+//        return m_FontName;
+//    }
+
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
         const juce::Rectangle<float> a (x, y, diameter, diameter);
         const float halfThickness = outlineThickness * 0.5f;
