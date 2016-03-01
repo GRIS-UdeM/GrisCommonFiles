@@ -44,65 +44,45 @@ struct GrisLookAndFeel    : public LookAndFeel_V3 {
     Colour m_BackGroundAndFieldColor;
     
     GrisLookAndFeel(){
-        
         m_BackGroundAndFieldColor = Colours::darkgrey;
 
         m_Font = Font(juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize));
         m_fFontSize = 10.f;
         m_Font.setHeight(m_fFontSize);
-      
-
     }
-
-	~GrisLookAndFeel(){
-	}
     
     Font getLabelFont (Label & label) override{
         return m_Font;
     }
-
     Font getComboBoxFont (ComboBox & comboBox) override{
         return m_Font;
     }
-    
     Font getTextButtonFont (TextButton &, int buttonHeight) override{
         return m_Font;
     }
-
     Font getMenuBarFont	(MenuBarComponent &, int itemIndex, const String & itemText) override{
         return m_Font;
     }
-    
     Colour getBackgroundColor(){
 //        return Colours::darkblue;
-//        return Colour(0, 102, 255);
-//        return Colour(51, 133, 255);
 //        return Colours::dodgerblue;
         return m_BackGroundAndFieldColor;
     }
     
     Colour getFieldColor(){
-        //        return Colours::darkblue;
-        //        return Colour(0, 102, 255);
-        //        return Colour(51, 133, 255);
+//        return Colours::darkblue;
 //        return Colours::dodgerblue;
         return m_BackGroundAndFieldColor;
     }
     
     Colour getFontColour(){
-        return Colours::whitesmoke;
 //        return Colours::azure;
+        return Colours::whitesmoke;
     }
 
 Typeface::Ptr getTypefaceForFont (const Font & font) override{
     return juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize);
 }
-
-
-    
-//    String getFontName(){
-//        return m_FontName;
-//    }
 
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
         const juce::Rectangle<float> a (x, y, diameter, diameter);
