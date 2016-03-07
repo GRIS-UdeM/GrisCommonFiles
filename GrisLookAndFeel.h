@@ -52,6 +52,10 @@ public:
         m_Font.setHeight(m_fFontSize);
     }
     
+    Font getFont(){
+        return m_Font;
+    }
+    
     Font getLabelFont (Label & label) override{
         return m_Font;
     }
