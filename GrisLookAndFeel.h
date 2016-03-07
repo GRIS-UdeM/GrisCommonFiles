@@ -81,9 +81,10 @@ public:
         return Colours::whitesmoke;
     }
     
-//    Typeface::Ptr getTypefaceForFont (const Font & font) override{
-//        return juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize);
-//    }
+    Colour getSliderColour(){
+        //        return Colours::azure;
+        return Colours::black;
+    }
     
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
         const juce::Rectangle<float> a (x, y, diameter, diameter);
