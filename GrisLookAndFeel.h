@@ -43,13 +43,20 @@ private:
     Font m_Font;
     float m_fFontSize;
     Colour m_BackGroundAndFieldColor;
+    Colour m_LightColour, m_DarkColour;
 public:
     GrisLookAndFeel(){
         m_BackGroundAndFieldColor = Colours::darkgrey;
+        m_LightColour = Colours::whitesmoke;
+        m_DarkColour = Colours::black;
         
         m_Font = Font(juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize));
         m_fFontSize = 10.f;
         m_Font.setHeight(m_fFontSize);
+        
+        setColour(Slider::thumbColourId, m_LightColour);
+        setColour(Slider::rotarySliderFillColourId, m_LightColour);
+        setColour(Slider::trackColourId, m_DarkColour);
     }
     
     Font getFont(){
@@ -69,26 +76,20 @@ public:
         return m_Font;
     }
     Colour getBackgroundColor(){
-        //        return Colours::darkblue;
-        //        return Colours::dodgerblue;
         return m_BackGroundAndFieldColor;
     }
     
     Colour getFieldColor(){
-        //        return Colours::darkblue;
-        //        return Colours::dodgerblue;
         return m_BackGroundAndFieldColor;
     }
     
     Colour getFontColour(){
-        //        return Colours::azure;
-        return Colours::whitesmoke;
+        return m_LightColour;
     }
     
-    Colour getSliderColour(){
-        //        return Colours::azure;
-        return Colours::black;
-    }
+//    Colour getSliderColour(){
+//        return m_LightColour;
+//    }
     
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
         const juce::Rectangle<float> a (x, y, diameter, diameter);
@@ -97,7 +98,7 @@ public:
         Path p;
         p.addEllipse (x + halfThickness, y + halfThickness, diameter - outlineThickness, diameter - outlineThickness);
         
-        const DropShadow ds (Colours::black, 1, Point<int> (0, 0));
+        const DropShadow ds (m_DarkColour, 1, Point<int> (0, 0));
         ds.drawForPath (g, p);
         
         g.setColour (colour);
@@ -192,31 +193,8 @@ public:
     
     void drawLinearSlider (Graphics& g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider& slider) override {
         g.fillAll (slider.findColour (Slider::backgroundColourId));
-        
-        if (style == Slider::LinearBar || style == Slider::LinearBarVertical) {
-            const float fx = (float) x, fy = (float) y, fw = (float) width, fh = (float) height;
-            
-            Path p;
-            
-            if (style == Slider::LinearBarVertical)
-                p.addRectangle (fx, sliderPos, fw, 1.0f + fh - sliderPos);
-                else
-                    p.addRectangle (fx, fy, sliderPos - fx, fh);
-                    
-                    
-                    Colour baseColour (slider.findColour (Slider::rotarySliderFillColourId)
-                                       .withMultipliedSaturation (slider.isEnabled() ? 1.0f : 0.5f)
-                                       .withMultipliedAlpha (0.8f));
-                    
-                    g.setColour (baseColour);
-                    g.fillPath (p);
-                    
-                    const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
-            g.drawRect (slider.getLocalBounds().toFloat(), lineThickness);
-        } else {
-            drawLinearSliderBackground (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
-            drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
-        }
+        drawLinearSliderBackground (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
+        drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
     }
     
     void drawLinearSliderBackground (Graphics& g, int x, int y, int width, int height, float /*sliderPos*/, float /*minSliderPos*/, float /*maxSliderPos*/, const Slider::SliderStyle /*style*/, Slider& slider) override {
@@ -235,7 +213,12 @@ public:
             on.addRectangle (r.removeFromBottom (onH));
             off.addRectangle (r);
         }
-        g.setColour (slider.findColour (Slider::rotarySliderFillColourId));
+        
+        if (slider.isEnabled()){
+            g.setColour (slider.findColour (Slider::rotarySliderFillColourId));
+        } else {
+            g.setColour (slider.findColour (Slider::rotarySliderFillColourId).withMultipliedBrightness(0.65));
+        }
         g.fillPath (on);
         g.setColour (slider.findColour (Slider::trackColourId));
         g.fillPath (off);
@@ -414,8 +397,6 @@ public:
 //                          jmax (1, ((int) depth) / 12));
 //    }
     
-//        int getTabButtonOverlap (int /*tabDepth*/)            override { return -1; }
-//        int getTabButtonSpaceAroundImage()                    override { return 0; }
 
         
         //    //we don't use those, so far
