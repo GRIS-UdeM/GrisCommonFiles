@@ -87,6 +87,10 @@ public:
         return m_LightColour;
     }
     
+    Colour getDarkColour(){
+        return m_DarkColour;
+    }
+    
 //    Colour getSliderColour(){
 //        return m_LightColour;
 //    }
