@@ -25,10 +25,7 @@
 #ifndef GRISLOOKANDFEEL_H_INCLUDED
 #define GRISLOOKANDFEEL_H_INCLUDED
 
-
 #include "../JuceLibraryCode/JuceHeader.h"
-
-
 
 //==============================================================================
 /** Custom Look And Feel subclasss.
@@ -51,7 +48,12 @@ public:
         m_DarkColour = Colours::black;
         
         m_Font = Font(juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize));
-        m_fFontSize = 10.f;
+#if WIN32
+        m_fFontSize = 18.f;
+#else
+		m_fFontSize = 10.f;
+#endif
+
         m_Font.setHeight(m_fFontSize);
         
         setColour(Slider::thumbColourId, m_LightColour);
@@ -343,7 +345,11 @@ public:
     void createTabTextLayout (const TabBarButton& button, float length, float depth, Colour colour, TextLayout& textLayout)
     {
         Font font (m_Font);
-        font.setHeight(depth * 0.35f);
+#if WIN32
+        font.setHeight(depth * 0.60f);
+#else
+		font.setHeight(depth * 0.35f);
+#endif
         font.setUnderline (button.hasKeyboardFocus (false));
         
         AttributedString s;
