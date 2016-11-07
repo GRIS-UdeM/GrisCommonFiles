@@ -40,14 +40,16 @@ private:
     Font m_Font;
     float m_fFontSize;
     Colour m_BackGroundAndFieldColor;
-    Colour m_LightColour, m_DarkColour;
+    Colour m_LightColour, m_DarkColour, m_GreyColour;
 public:
     GrisLookAndFeel(){
-        m_BackGroundAndFieldColor = Colours::darkgrey;
-        m_LightColour = Colours::whitesmoke;
-        m_DarkColour = Colours::black;
+        m_BackGroundAndFieldColor   = Colours::darkgrey;
+        m_LightColour               = Colours::whitesmoke;
+        m_DarkColour                = Colours::black;
+        m_GreyColour                = Colours::grey;
         
         m_Font = Font(juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize));
+
 #if WIN32
         m_fFontSize = 18.f;
 #else
@@ -87,6 +89,10 @@ public:
     
     Colour getFontColour(){
         return m_LightColour;
+    }
+    
+    Colour getScrollBarColour(){
+        return m_GreyColour;
     }
     
     Colour getDarkColour(){
