@@ -39,11 +39,11 @@ private:
     
     Font m_Font;
     float m_fFontSize;
-    Colour m_BackGroundAndFieldColor;
+    Colour m_BackGroundAndFieldColour;
     Colour m_LightColour, m_DarkColour, m_GreyColour;
 public:
     GrisLookAndFeel(){
-        m_BackGroundAndFieldColor   = Colours::darkgrey;
+        m_BackGroundAndFieldColour   = Colours::darkgrey;
         m_LightColour               = Colours::whitesmoke;
         m_DarkColour                = Colours::black;
         m_GreyColour                = Colours::grey;
@@ -79,12 +79,12 @@ public:
     Font getMenuBarFont	(MenuBarComponent &, int itemIndex, const String & itemText) override{
         return m_Font;
     }
-    Colour getBackgroundColor(){
-        return m_BackGroundAndFieldColor;
+    Colour getBackgroundColour(){
+        return m_BackGroundAndFieldColour;
     }
     
-    Colour getFieldColor(){
-        return m_BackGroundAndFieldColor;
+    Colour getFieldColour(){
+        return m_BackGroundAndFieldColour;
     }
     
     Colour getFontColour(){
@@ -99,9 +99,9 @@ public:
         return m_DarkColour;
     }
     
-//    Colour getSliderColour(){
-//        return m_LightColour;
-//    }
+    Colour getLightColour(){
+        return m_LightColour;
+    }
     
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
         const juce::Rectangle<float> a (x, y, diameter, diameter);
