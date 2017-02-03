@@ -40,14 +40,23 @@ private:
     Font m_Font;
     float m_fFontSize;
     Colour m_BackGroundAndFieldColour;
-    Colour m_LightColour, m_DarkColour, m_GreyColour;
+    Colour m_WinBackGroundAndFieldColour;
+    Colour m_LightColour, m_DarkColour, m_GreyColour, m_Oncolor, m_TextBgcolor;
 public:
     GrisLookAndFeel(){
         m_BackGroundAndFieldColour   = Colours::darkgrey;
+        m_WinBackGroundAndFieldColour = Colour::fromRGB(55, 56, 57);
         m_LightColour               = Colours::whitesmoke;
         m_DarkColour                = Colours::black;
         m_GreyColour                = Colours::grey;
+        m_Oncolor                   = Colour::fromRGB(255, 165, 25);
+        m_TextBgcolor               = Colour::fromRGB(202, 202, 202);
         
+        setColour(PopupMenu::highlightedBackgroundColourId, m_Oncolor);
+        setColour(TextEditor::backgroundColourId, m_TextBgcolor);
+        setColour(ComboBox::backgroundColourId, m_TextBgcolor);
+        
+
         m_Font = Font(juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize));
 
 #if WIN32
@@ -59,8 +68,10 @@ public:
         m_Font.setHeight(m_fFontSize);
         
         setColour(Slider::thumbColourId, m_LightColour);
-        setColour(Slider::rotarySliderFillColourId, m_LightColour);
+        setColour(Slider::rotarySliderFillColourId, m_Oncolor);
         setColour(Slider::trackColourId, m_DarkColour);
+        
+       
     }
     
     Font getFont(){
@@ -79,6 +90,11 @@ public:
     Font getMenuBarFont	(MenuBarComponent &, int itemIndex, const String & itemText) override{
         return m_Font;
     }
+    
+    Colour getWinBackgroundColour(){
+        return m_WinBackGroundAndFieldColour;
+    }
+
     Colour getBackgroundColour(){
         return m_BackGroundAndFieldColour;
     }
@@ -103,6 +119,44 @@ public:
         return m_LightColour;
     }
     
+    //https://github.com/audioplastic/Juce-look-and-feel-examples/blob/master/JuceLibraryCode/modules/juce_gui_basics/lookandfeel/juce_LookAndFeel.cpp
+    
+    void drawComboBox(Graphics& g,int width, int height,bool isButtonDown,int buttonX,int buttonY,int buttonW,int buttonH,ComboBox & box) override
+    {
+        box.setColour(ColourSelector::backgroundColourId, m_Oncolor);
+
+        
+        g.fillAll (m_TextBgcolor);//box.findColour (ComboBox::backgroundColourId))
+        
+        const Colour buttonColour (m_DarkColour);//box.findColour (ComboBox::buttonColourId)
+        
+        if (box.isEnabled() && box.hasKeyboardFocus (false))
+        {
+            g.setColour (buttonColour);
+            //g.drawRect (0, 0, width, height, 2);
+        }
+        else
+        {
+            g.setColour (box.findColour (ComboBox::outlineColourId));
+            //g.drawRect (0, 0, width, height);
+        }
+        
+        const float arrowX = 0.3f;
+        const float arrowH = 0.2f;
+        
+        Path p;
+        p.addTriangle (buttonX + buttonW * 0.5f,            buttonY + buttonH * (0.45f - arrowH),
+                       buttonX + buttonW * (1.0f - arrowX), buttonY + buttonH * 0.45f,
+                       buttonX + buttonW * arrowX,          buttonY + buttonH * 0.45f);
+        
+        p.addTriangle (buttonX + buttonW * 0.5f,            buttonY + buttonH * (0.55f + arrowH),
+                       buttonX + buttonW * (1.0f - arrowX), buttonY + buttonH * 0.55f,
+                       buttonX + buttonW * arrowX,          buttonY + buttonH * 0.55f);
+        
+        g.setColour (m_DarkColour.withMultipliedAlpha (box.isEnabled() ? 1.0f : 0.3f));//box.findColour (ComboBox::arrowColourId)
+        g.fillPath (p);
+    }
+    
     void drawRoundThumb (Graphics& g, const float x, const float y, const float diameter, const Colour& colour, float outlineThickness) {
         const juce::Rectangle<float> a (x, y, diameter, diameter);
         const float halfThickness = outlineThickness * 0.5f;
@@ -121,11 +175,13 @@ public:
     }
     
     void drawButtonBackground (Graphics& g, Button& button, const Colour& backgroundColour, bool isMouseOverButton, bool isButtonDown) override {
+        
         Colour baseColour (backgroundColour.withMultipliedSaturation (button.hasKeyboardFocus (true) ? 1.3f : 0.9f).withMultipliedAlpha (button.isEnabled() ? 0.9f : 0.5f));
         
         if (isButtonDown || isMouseOverButton){
             baseColour = baseColour.contrasting (isButtonDown ? 0.2f : 0.1f);
         }
+
         const bool flatOnLeft   = button.isConnectedOnLeft();
         const bool flatOnRight  = button.isConnectedOnRight();
         const bool flatOnTop    = button.isConnectedOnTop();
@@ -152,10 +208,12 @@ public:
             g.fillPath (outline);
             
             if (! button.getToggleState()) {
-                g.setColour (outlineColour);
+                g.setColour (m_DarkColour);//outlineColour
                 g.strokePath (outline, PathStrokeType (lineThickness));
             }
         }
+        button.setColour (TextButton::buttonColourId, m_LightColour);
+        button.setColour (TextButton::buttonOnColourId, m_Oncolor);
     }
     
     void drawTickBox (Graphics& g, Component& component, float x, float y, float w, float h, bool ticked, bool isEnabled, bool isMouseOverButton, bool isButtonDown) override {
@@ -166,18 +224,21 @@ public:
         drawRoundThumb (g, x, y + (h - boxSize) * 0.5f, boxSize, colour, isEnabled ? ((isButtonDown || isMouseOverButton) ? 1.1f : 0.5f) : 0.3f);
         
         if (ticked) {
-            const Path tick (LookAndFeel_V2::getTickShape (6.0f));
-            g.setColour (isEnabled ? findColour (TextButton::buttonOnColourId) : Colours::grey);
+            const Colour colourT (m_Oncolor.withMultipliedSaturation ((component.hasKeyboardFocus (false) || isDownOrDragging) ? 1.3f : 0.9f).withMultipliedAlpha (component.isEnabled() ? 1.0f : 0.7f));
+            drawRoundThumb (g, x, y + (h - boxSize) * 0.5f, boxSize, colourT, isEnabled ? ((isButtonDown || isMouseOverButton) ? 1.1f : 0.5f) : 0.3f);
+            
+           /*const Path tick (LookAndFeel_V2::getTickShape(6.0f));
+            g.setColour (isEnabled ? m_Oncolor : Colours::grey);
             const float scale = 9.0f;
             const AffineTransform trans (AffineTransform::scale (w / scale, h / scale).translated (x - 2.5f, y + 1.0f));
-            g.fillPath (tick, trans);
+            g.fillPath (tick, trans);*/
         }
     }
     
     void drawLinearSliderThumb (Graphics& g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider& slider) override {
         const float sliderRadius = (float) (getSliderThumbRadius (slider) - 2);
         bool isDownOrDragging = slider.isEnabled() && (slider.isMouseOverOrDragging() || slider.isMouseButtonDown());
-        Colour knobColour (slider.findColour (Slider::thumbColourId).withMultipliedSaturation ((slider.hasKeyboardFocus (false) || isDownOrDragging) ? 1.3f : 0.9f).withMultipliedAlpha (slider.isEnabled() ? 1.0f : 0.7f));
+        Colour knobColour = isDownOrDragging ? m_Oncolor : m_Oncolor.darker();//(slider.findColour (Slider::thumbColourId).withMultipliedSaturation ((slider.hasKeyboardFocus (false) || isDownOrDragging) ? 1.3f : 0.9f).withMultipliedAlpha (slider.isEnabled() ? 1.0f : 0.7f));
         
         if (style == Slider::LinearHorizontal || style == Slider::LinearVertical) {
             float kx, ky;
@@ -204,14 +265,15 @@ public:
     }
     
     void drawLinearSlider (Graphics& g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider& slider) override {
-        g.fillAll (slider.findColour (Slider::backgroundColourId));
-        drawLinearSliderBackground (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
-        drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
+        //g.fillAll = (slider.findColour (Slider::backgroundColourId));
+        drawLinearSliderBackground (g, x, y, width, height+2, sliderPos, minSliderPos, maxSliderPos, style, slider);
+        drawLinearSliderThumb (g, x, y, width, height+2, sliderPos, minSliderPos, maxSliderPos, style, slider);
     }
     
     void drawLinearSliderBackground (Graphics& g, int x, int y, int width, int height, float /*sliderPos*/, float /*minSliderPos*/, float /*maxSliderPos*/, const Slider::SliderStyle /*style*/, Slider& slider) override {
         const float sliderRadius = getSliderThumbRadius (slider) - 5.0f;
         Path on, off;
+
         if (slider.isHorizontal()) {
             const float iy = y + height * 0.5f - sliderRadius * 0.5f;
             juce::Rectangle<float> r (x - sliderRadius * 0.5f, iy, width + sliderRadius, sliderRadius);
@@ -236,11 +298,24 @@ public:
         g.fillPath (off);
     }
     
+    void drawTextEditorOutline(Graphics& g, int width, int height, TextEditor& t) override {
+        if(t.isMouseOver())
+        {
+            g.setColour(m_Oncolor);
+            g.drawRect (0, 0, width, height);
+        }
+       
+    }
+    
+    /*void drawLabel(Graphics& g, Label& l) override {
+        g.drawRect (0, 0, l.getWidth(), l.getHeight());
+    }*/
+    
     void drawToggleButton (Graphics& g, ToggleButton& button, bool isMouseOverButton, bool isButtonDown) override {
         if (button.hasKeyboardFocus (true))
         {
             g.setColour (button.findColour (TextEditor::focusedOutlineColourId));
-            g.drawRect (0, 0, button.getWidth(), button.getHeight());
+            //g.drawRect (0, 0, button.getWidth(), button.getHeight());
         }
         
         float fontSize = jmin (15.0f, button.getHeight() * 0.75f);
@@ -253,7 +328,7 @@ public:
                      isMouseOverButton,
                      isButtonDown);
         
-        g.setColour (button.findColour (ToggleButton::textColourId));
+        g.setColour(button.findColour (ToggleButton::textColourId));
         g.setFont(m_Font);
         
         if (! button.isEnabled())
@@ -281,7 +356,8 @@ public:
         }
         else
         {
-            Point<int> p1, p2;
+            g.setColour (bkg.brighter (0.1f));
+            /*Point<int> p1, p2;
             
             switch (o)
             {
@@ -293,25 +369,25 @@ public:
             }
             
             g.setGradientFill (ColourGradient (bkg.brighter (0.2f), (float) p1.x, (float) p1.y,
-                                               bkg.darker (0.1f),   (float) p2.x, (float) p2.y, false));
+                                               bkg.darker (0.1f),   (float) p2.x, (float) p2.y, false));*/
         }
         
         g.fillRect (activeArea);
         
-        g.setColour (button.findColour (TabbedButtonBar::tabOutlineColourId));
+        g.setColour (m_DarkColour);//button.findColour (TabbedButtonBar::tabOutlineColourId)
         
         Rectangle<int> r (activeArea);
         
-        if (o != TabbedButtonBar::TabsAtBottom)   g.fillRect (r.removeFromTop (1));
+        /*if (o != TabbedButtonBar::TabsAtBottom)   g.fillRect (r.removeFromTop (1));
         if (o != TabbedButtonBar::TabsAtTop)      g.fillRect (r.removeFromBottom (1));
         if (o != TabbedButtonBar::TabsAtRight)    g.fillRect (r.removeFromLeft (1));
-        if (o != TabbedButtonBar::TabsAtLeft)     g.fillRect (r.removeFromRight (1));
+        if (o != TabbedButtonBar::TabsAtLeft)     g.fillRect (r.removeFromRight (1));*/
         
         const float alpha = button.isEnabled() ? ((isMouseOver || isMouseDown) ? 1.0f : 0.8f) : 0.3f;
         
-        Colour col (bkg.contrasting().withMultipliedAlpha (alpha));
+        Colour col = (bkg.contrasting().withMultipliedAlpha (alpha));
         
-        if (TabbedButtonBar* bar = button.findParentComponentOfClass<TabbedButtonBar>())
+        /*if (TabbedButtonBar* bar = button.findParentComponentOfClass<TabbedButtonBar>())
         {
             TabbedButtonBar::ColourIds colID = button.isFrontTab() ? TabbedButtonBar::frontTextColourId
             : TabbedButtonBar::tabTextColourId;
@@ -319,8 +395,8 @@ public:
             if (bar->isColourSpecified (colID))
                 col = bar->findColour (colID);
             else if (isColourSpecified (colID))
-                col = findColour (colID);
-        }
+               col = findColour (colID);
+        }*/
         
         const Rectangle<float> area (button.getTextArea().toFloat());
         
@@ -335,14 +411,14 @@ public:
         
         AffineTransform t;
         
-        switch (o)
+        /*switch (o)
         {
             case TabbedButtonBar::TabsAtLeft:   t = t.rotated (float_Pi * -0.5f).translated (area.getX(), area.getBottom()); break;
             case TabbedButtonBar::TabsAtRight:  t = t.rotated (float_Pi *  0.5f).translated (area.getRight(), area.getY()); break;
             case TabbedButtonBar::TabsAtTop:
             case TabbedButtonBar::TabsAtBottom: t = t.translated (area.getX(), area.getY()); break;
             default:                            jassertfalse; break;
-        }
+        }*/
         
         g.addTransform (t);
         textLayout.draw (g, Rectangle<float> (length, depth));
@@ -354,7 +430,8 @@ public:
 #if WIN32
         font.setHeight(depth * 0.60f);
 #else
-		font.setHeight(depth * 0.35f);
+
+        font.setHeight(depth * 0.35f);
 #endif
         font.setUnderline (button.hasKeyboardFocus (false));
         
