@@ -34,14 +34,21 @@
  It's a good idea not to hard code your colours, use the findColour method along with appropriate
  ColourIds so you can set these on a per-component basis.
  */
+
+
+
+
 class GrisLookAndFeel    : public LookAndFeel_V3 {
 private:
     
-    Font m_Font;
     float m_fFontSize;
+
+    Font  m_Font = Font(juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize));
+
     Colour m_BackGroundAndFieldColour;
     Colour m_WinBackGroundAndFieldColour;
     Colour m_LightColour, m_DarkColour, m_GreyColour, m_Oncolor, m_TextBgcolor;
+    
 public:
     GrisLookAndFeel(){
         m_BackGroundAndFieldColour   = Colours::darkgrey;
@@ -57,20 +64,19 @@ public:
         setColour(ComboBox::backgroundColourId, m_TextBgcolor);
         
 
-        m_Font = Font(juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize));
 
-#if WIN32
-        m_fFontSize = 18.f;
-#else
-		m_fFontSize = 10.f;
-#endif
-
-        m_Font.setHeight(m_fFontSize);
+        
         
         setColour(Slider::thumbColourId, m_LightColour);
         setColour(Slider::rotarySliderFillColourId, m_Oncolor);
         setColour(Slider::trackColourId, m_DarkColour);
         
+#if WIN32
+        m_fFontSize = 18.f;
+#else
+        m_fFontSize = 10.f;
+#endif
+        m_Font.setHeight(m_fFontSize);
        
     }
     
@@ -334,7 +340,7 @@ public:
     
     void drawTabButton (TabBarButton& button, Graphics& g, bool isMouseOver, bool isMouseDown) override{
         const Rectangle<int> activeArea (button.getActiveArea());
-        const TabbedButtonBar::Orientation o = button.getTabbedButtonBar().getOrientation();
+        //const TabbedButtonBar::Orientation o = button.getTabbedButtonBar().getOrientation();
         const Colour bkg (button.getTabBackgroundColour());
         
         if (button.getToggleState())
