@@ -47,23 +47,29 @@ private:
 
     Colour m_BackGroundAndFieldColour;
     Colour m_WinBackGroundAndFieldColour;
-    Colour m_LightColour, m_DarkColour, m_GreyColour, m_Oncolor, m_TextBgcolor;
+    Colour m_LightColour, m_DarkColour, m_GreyColour, m_Oncolor, m_TextBgcolor,m_OncolorOver,m_OncolorDown,m_Offcolor;
     
 public:
     GrisLookAndFeel(){
         m_BackGroundAndFieldColour   = Colours::darkgrey;
-        m_WinBackGroundAndFieldColour = Colour::fromRGB(55, 56, 57);
+        m_WinBackGroundAndFieldColour = Colour::fromRGB(46, 46, 46);
         m_LightColour               = Colours::whitesmoke;
         m_DarkColour                = Colours::black;
         m_GreyColour                = Colours::grey;
+        
         m_Oncolor                   = Colour::fromRGB(255, 165, 25);
+        m_OncolorOver               = Colour::fromRGB(255, 184, 75);
+        m_OncolorDown               = Colour::fromRGB(222, 144, 22);
+        
+        m_Offcolor                   = Colour::fromRGB(46, 46, 46);
+       
+        
         m_TextBgcolor               = Colour::fromRGB(202, 202, 202);
         
         setColour(PopupMenu::highlightedBackgroundColourId, m_Oncolor);
         setColour(TextEditor::backgroundColourId, m_TextBgcolor);
         setColour(ComboBox::backgroundColourId, m_TextBgcolor);
-        
-
+      
 
         
         
@@ -218,47 +224,69 @@ public:
         button.setColour (TextButton::buttonOnColourId, m_Oncolor);
     }
     
+    
     void drawTickBox (Graphics& g, Component& component, float x, float y, float w, float h, bool ticked, bool isEnabled, bool isMouseOverButton, bool isButtonDown) override {
-        const float boxSize = w * 0.7f;
-        bool isDownOrDragging = component.isEnabled() && (component.isMouseOverOrDragging() || component.isMouseButtonDown());
-        const Colour colour (component.findColour (TextButton::buttonColourId).withMultipliedSaturation ((component.hasKeyboardFocus (false) || isDownOrDragging) ? 1.5f : 1.9f).withMultipliedAlpha (component.isEnabled() ? 0.8f : 0.3f));
-        
-        drawRoundThumb (g, x, y + (h - boxSize) * 0.5f, boxSize, colour, isEnabled ? ((isButtonDown || isMouseOverButton) ? 1.0f : 0.5f) : 0.3f);
-        
-        if (ticked) {
-            const Colour colourT (m_Oncolor.withMultipliedSaturation ((component.hasKeyboardFocus (false) || isDownOrDragging) ? 1.3f : 0.9f).withMultipliedAlpha (component.isEnabled() ? 1.9f : 0.3f));
-            drawRoundThumb (g, x, y + (h - boxSize) * 0.5f, boxSize, colourT, isEnabled ? ((isButtonDown || isMouseOverButton) ? 1.1f : 0.5f) : 0.3f);
+        const float boxSize = w * 0.8f;
+        const Rectangle<float> r (x, y + (h - boxSize) * 0.5f, boxSize, boxSize);
 
+        if (ticked) {
+            Colour colour = m_Oncolor;
+            
+            if(component.isMouseOver()){
+                colour = m_OncolorOver;
+            }
+            
+            if(!component.isEnabled()){
+                colour = m_Oncolor.withBrightness(0.3f);
+            }
+            g.setColour (colour);
+            g.fillRect (r);
+
+        }else{
+            Colour colour = m_Offcolor;
+            if(!component.isEnabled()){
+                colour = m_Offcolor.withBrightness(0.3f);
+            }
+            g.setColour (colour);
+            g.fillRect (r);
+        }
+        
+        if(component.isEnabled() && component.isMouseButtonDown()){
+            g.setColour (m_OncolorDown);
+            g.fillRect (r);
         }
     }
     
+    
     void drawLinearSliderThumb (Graphics& g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider& slider) override {
         const float sliderRadius = (float) (getSliderThumbRadius (slider) - 2);
-        bool isDownOrDragging = slider.isEnabled() && (slider.isMouseOverOrDragging() || slider.isMouseButtonDown());
-        Colour knobColour = isDownOrDragging ? m_Oncolor : m_Oncolor.darker();//(slider.findColour (Slider::thumbColourId).withMultipliedSaturation ((slider.hasKeyboardFocus (false) || isDownOrDragging) ? 1.3f : 0.9f).withMultipliedAlpha (slider.isEnabled() ? 1.0f : 0.7f));
+        float kx, ky;
         
-        if (style == Slider::LinearHorizontal || style == Slider::LinearVertical) {
-            float kx, ky;
-            
-            if (style == Slider::LinearVertical) {
-                kx = x + width * 0.5f;
-                ky = sliderPos;
-            } else {
-                kx = sliderPos;
-                ky = y + height * 0.5f;
-            }
-            
-            const float outlineThickness = slider.isEnabled() ? 0.8f : 0.3f;
-            
-            drawRoundThumb (g,
-                            kx - sliderRadius,
-                            ky - sliderRadius,
-                            sliderRadius * 2.0f,
-                            knobColour, outlineThickness);
+        if (style == Slider::LinearVertical) {
+            kx = x + width * 0.5f;
+            ky = sliderPos;
         } else {
-            // Just call the base class for the demo
-            LookAndFeel_V2::drawLinearSliderThumb (g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, slider);
+            kx = sliderPos;
+            ky = y + height * 0.5f;
         }
+        const Rectangle<float> r (kx - (sliderRadius/2.0f), ky- sliderRadius , 6, height*2.0f);
+
+        if(slider.isEnabled()){
+            Colour colour = m_Oncolor;
+            
+            if(slider.isMouseOver()){
+                colour = m_OncolorOver;
+            }
+            if(slider.isMouseButtonDown()){
+                colour = m_OncolorDown;
+            }
+            g.setColour (colour);
+            g.fillRect (r);
+        }else{
+            g.setColour (m_Offcolor);
+            g.fillRect (r);
+        }
+        
     }
     
     void drawLinearSlider (Graphics& g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider& slider) override {
@@ -286,12 +314,15 @@ public:
         
         if (slider.isEnabled()){
             g.setColour (slider.findColour (Slider::rotarySliderFillColourId));
-        } else {
-            g.setColour (slider.findColour (Slider::rotarySliderFillColourId).withMultipliedBrightness(0.65));
+            g.fillPath (on);
+            g.setColour (slider.findColour (Slider::trackColourId));
+            g.fillPath (off);
+        }else{
+            g.setColour (m_Offcolor);
+            g.fillPath (on);
+            g.fillPath (off);
         }
-        g.fillPath (on);
-        g.setColour (slider.findColour (Slider::trackColourId));
-        g.fillPath (off);
+       
     }
     
     void drawTextEditorOutline(Graphics& g, int width, int height, TextEditor& t) override {
@@ -340,6 +371,44 @@ public:
     
     void drawTabButton (TabBarButton& button, Graphics& g, bool isMouseOver, bool isMouseDown) override{
         const Rectangle<int> activeArea (button.getActiveArea());
+    
+        const TabbedButtonBar::Orientation o = button.getTabbedButtonBar().getOrientation();
+        const Colour bkg (button.getTabBackgroundColour());
+        
+        if (button.getToggleState())
+        {
+            g.setColour (bkg);
+        }
+        else
+        {
+            g.setColour (bkg.brighter (0.1f));
+        }
+        
+        g.fillRect (activeArea);
+        
+        g.setColour (m_WinBackGroundAndFieldColour);
+        
+        Rectangle<int> r (activeArea);
+        if (o != TabbedButtonBar::TabsAtTop)      g.fillRect (r.removeFromBottom (1));
+            if (o != TabbedButtonBar::TabsAtRight)    g.fillRect (r.removeFromLeft (1));
+                if (o != TabbedButtonBar::TabsAtLeft)     g.fillRect (r.removeFromRight (1));
+        
+        const float alpha = button.isEnabled() ? ((isMouseOver || isMouseDown) ? 1.0f : 0.8f) : 0.3f;
+        Colour col = (bkg.contrasting().withMultipliedAlpha (alpha));
+        const Rectangle<float> area (button.getTextArea().toFloat());
+        
+        float length = area.getWidth();
+        float depth  = area.getHeight();
+        
+        if (button.getTabbedButtonBar().isVertical())
+            std::swap (length, depth);
+            
+        TextLayout textLayout;
+        createTabTextLayout (button, length, depth, col, textLayout);
+        textLayout.draw (g, Rectangle<float> (length, depth));
+        /*
+        Rectangle<int> activeArea (button.getActiveArea());
+
         //const TabbedButtonBar::Orientation o = button.getTabbedButtonBar().getOrientation();
         const Colour bkg (button.getTabBackgroundColour());
         
@@ -353,11 +422,9 @@ public:
         }
         
         g.fillRect (activeArea);
-        g.setColour (m_DarkColour);
+        g.setColour (m_WinBackGroundAndFieldColour);
         
         Rectangle<int> r (activeArea);
-        
-        
         const float alpha = button.isEnabled() ? ((isMouseOver || isMouseDown) ? 1.0f : 0.8f) : 0.3f;
         Colour col = (bkg.contrasting().withMultipliedAlpha (alpha));
         
@@ -375,7 +442,7 @@ public:
         
         AffineTransform t;
         g.addTransform (t);
-        textLayout.draw (g, Rectangle<float> (length, depth));
+        textLayout.draw (g, Rectangle<float> (length, depth));*/
     }
     
     void createTabTextLayout (const TabBarButton& button, float length, float depth, Colour colour, TextLayout& textLayout)
@@ -395,6 +462,8 @@ public:
         
         textLayout.createLayout (s, length);
     }
+    
+
     
 //    void drawTabButtonText (TabBarButton& button, Graphics& g, bool isMouseOver, bool isMouseDown) override
 //    {
