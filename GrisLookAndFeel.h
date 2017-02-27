@@ -64,18 +64,24 @@ public:
         m_Offcolor                   = Colour::fromRGB(46, 46, 46);
        
         
-        m_TextBgcolor               = Colour::fromRGB(202, 202, 202);
+        m_TextBgcolor               = Colour::fromRGB(172, 172, 172);
         
         setColour(PopupMenu::highlightedBackgroundColourId, m_Oncolor);
         setColour(TextEditor::backgroundColourId, m_TextBgcolor);
-        setColour(ComboBox::backgroundColourId, m_TextBgcolor);
-      
-
+        setColour(TextEditor::highlightColourId, m_Oncolor);
+        setColour(TextEditor::shadowColourId, m_TextBgcolor);
         
+        
+        setColour(ComboBox::backgroundColourId, m_TextBgcolor);
+        setColour(ComboBox::outlineColourId, m_TextBgcolor);
         
         setColour(Slider::thumbColourId, m_LightColour);
         setColour(Slider::rotarySliderFillColourId, m_Oncolor);
         setColour(Slider::trackColourId, m_DarkColour);
+        setColour(Slider::textBoxBackgroundColourId, m_TextBgcolor);
+        setColour(Slider::textBoxOutlineColourId, Colours::transparentBlack);
+        
+        
         
 #if WIN32
         m_fFontSize = 18.f;
@@ -135,20 +141,11 @@ public:
     void drawComboBox(Graphics& g,int width, int height,bool isButtonDown,int buttonX,int buttonY,int buttonW,int buttonH,ComboBox & box) override
     {
         box.setColour(ColourSelector::backgroundColourId, m_Oncolor);
+    
 
         g.fillAll (m_TextBgcolor);//box.findColour (ComboBox::backgroundColourId))
         
         const Colour buttonColour (m_DarkColour);//box.findColour (ComboBox::buttonColourId)
-        
-        if (box.isEnabled() && box.hasKeyboardFocus (false))
-        {
-            g.setColour (buttonColour);
-        }
-        else
-        {
-            g.setColour (box.findColour (ComboBox::outlineColourId));
-        }
-        
         const float arrowX = 0.3f;
         const float arrowH = 0.2f;
         
@@ -184,44 +181,25 @@ public:
     
     void drawButtonBackground (Graphics& g, Button& button, const Colour& backgroundColour, bool isMouseOverButton, bool isButtonDown) override {
         
-        Colour baseColour (backgroundColour.withMultipliedSaturation (button.hasKeyboardFocus (true) ? 1.3f : 0.9f).withMultipliedAlpha (button.isEnabled() ? 0.9f : 0.5f));
-        
-        if (isButtonDown || isMouseOverButton){
-            baseColour = baseColour.contrasting (isButtonDown ? 0.2f : 0.1f);
-        }
-
-        const bool flatOnLeft   = button.isConnectedOnLeft();
-        const bool flatOnRight  = button.isConnectedOnRight();
-        const bool flatOnTop    = button.isConnectedOnTop();
-        const bool flatOnBottom = button.isConnectedOnBottom();
-        
         const float width  = button.getWidth() - 1.0f;
         const float height = button.getHeight() - 1.0f;
-        
-        if (width > 0 && height > 0) {
-            const float cornerSize = jmin (15.0f, jmin (width, height) * 0.45f);
-            const float lineThickness = cornerSize * 0.1f;
-            const float halfThickness = lineThickness * 0.5f;
-            
-            Path outline;
-            outline.addRoundedRectangle (0.5f + halfThickness, 0.5f + halfThickness, width - lineThickness, height - lineThickness,
-                                         cornerSize, cornerSize,
-                                         ! (flatOnLeft  || flatOnTop),
-                                         ! (flatOnRight || flatOnTop),
-                                         ! (flatOnLeft  || flatOnBottom),
-                                         ! (flatOnRight || flatOnBottom));
-            
-            const Colour outlineColour (button.findColour (button.getToggleState() ? TextButton::textColourOnId : TextButton::textColourOffId));
-            g.setColour (baseColour);
-            g.fillPath (outline);
-            
-            if (! button.getToggleState()) {
-                g.setColour (m_DarkColour);//outlineColour
-                g.strokePath (outline, PathStrokeType (lineThickness));
-            }
+        const float cornerSize = jmin (15.0f, jmin (width, height) * 0.45f);
+        const float lineThickness = cornerSize * 0.1f;
+        const float halfThickness = lineThickness * 0.5f;
+        Path outline;
+        outline.addRectangle(0.5f + halfThickness, 0.5f + halfThickness, width - lineThickness, height - lineThickness);
+        g.setColour (m_TextBgcolor);
+        if (isButtonDown || isMouseOverButton){
+            g.setColour (m_OncolorOver);
         }
-        button.setColour (TextButton::buttonColourId, m_LightColour);
-        button.setColour (TextButton::buttonOnColourId, m_Oncolor);
+        if ( button.getToggleState()) {
+            g.setColour (m_Oncolor);//outlineColour
+
+        }
+        if(button.isEnabled() && button.isMouseButtonDown()){
+            g.setColour (m_OncolorDown);
+        }
+        g.fillPath (outline);
     }
     
     
@@ -325,6 +303,11 @@ public:
        
     }
     
+    void fillTextEditorBackground(Graphics& g, int width, int height, TextEditor& t) override {
+        g.setColour(m_TextBgcolor);
+        g.fillAll();
+    }
+    
     void drawTextEditorOutline(Graphics& g, int width, int height, TextEditor& t) override {
         if(t.isMouseOver())
         {
@@ -333,10 +316,6 @@ public:
         }
        
     }
-    
-    /*void drawLabel(Graphics& g, Label& l) override {
-        g.drawRect (0, 0, l.getWidth(), l.getHeight());
-    }*/
     
     void drawToggleButton (Graphics& g, ToggleButton& button, bool isMouseOverButton, bool isButtonDown) override {
         if (button.hasKeyboardFocus (true))
@@ -371,7 +350,7 @@ public:
     
     void drawTabButton (TabBarButton& button, Graphics& g, bool isMouseOver, bool isMouseDown) override{
         const Rectangle<int> activeArea (button.getActiveArea());
-    
+        activeArea.withHeight(18);
         const TabbedButtonBar::Orientation o = button.getTabbedButtonBar().getOrientation();
         const Colour bkg (button.getTabBackgroundColour());
         
