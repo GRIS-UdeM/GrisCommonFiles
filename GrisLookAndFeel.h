@@ -309,11 +309,12 @@ public:
     }
     
     void drawTextEditorOutline(Graphics& g, int width, int height, TextEditor& t) override {
-        if(t.isMouseOver())
+        if(t.hasKeyboardFocus(true))
         {
             g.setColour(m_Oncolor);
             g.drawRect (0, 0, width, height);
         }
+        
        
     }
     
