@@ -81,7 +81,8 @@ public:
         setColour(Slider::textBoxBackgroundColourId, m_TextBgcolor);
         setColour(Slider::textBoxOutlineColourId, Colours::transparentBlack);
         
-        
+        setColour(TooltipWindow::ColourIds::backgroundColourId,m_BackGroundAndFieldColour.withBrightness(0.8));
+        setColour(TooltipWindow::ColourIds::outlineColourId, m_BackGroundAndFieldColour.withBrightness(0.8));
         
 #if WIN32
         m_fFontSize = 18.f;
@@ -136,6 +137,9 @@ public:
         return m_LightColour;
     }
     
+    Colour getOnColour(){
+        return m_Oncolor;
+    }
     //https://github.com/audioplastic/Juce-look-and-feel-examples/blob/master/JuceLibraryCode/modules/juce_gui_basics/lookandfeel/juce_LookAndFeel.cpp
     
     void drawComboBox(Graphics& g,int width, int height,bool isButtonDown,int buttonX,int buttonY,int buttonW,int buttonH,ComboBox & box) override
