@@ -140,6 +140,9 @@ public:
     Colour getOnColour(){
         return m_Oncolor;
     }
+    Colour getOffColour(){
+        return m_Offcolor;
+    }
     //https://github.com/audioplastic/Juce-look-and-feel-examples/blob/master/JuceLibraryCode/modules/juce_gui_basics/lookandfeel/juce_LookAndFeel.cpp
     
     void drawComboBox(Graphics& g,int width, int height,bool isButtonDown,int buttonX,int buttonY,int buttonW,int buttonH,ComboBox & box) override
