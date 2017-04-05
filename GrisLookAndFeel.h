@@ -52,18 +52,18 @@ private:
 public:
     GrisLookAndFeel(){
         
-        this->backGroundAndFieldColour      = Colours::darkgrey;
+        this->backGroundAndFieldColour      = Colour::fromRGB(75, 75, 75);  //Colours::darkgrey;
         this->winBackGroundAndFieldColour   = Colour::fromRGB(46, 46, 46);
         
-        this->lightColour               = Colours::whitesmoke;
-        this->darkColour                = Colours::black;
-        this->greyColour                = Colours::grey;
+        this->lightColour               = Colour::fromRGB(235, 245, 250);   //Colours::whitesmoke;
+        this->darkColour                = Colour::fromRGB(15,  10,  5);       //Colours::black;
+        this->greyColour                = Colour::fromRGB(120, 120, 120);   //Colours::grey;
         this->editBgcolor               = Colour::fromRGB(172, 172, 172);
         
         this->onColor                   = Colour::fromRGB(255, 165, 25);
         this->onColorOver               = Colour::fromRGB(255, 184, 75);
         this->onColorDown               = Colour::fromRGB(222, 144, 22);
-        this->offColor                  = Colour::fromRGB(46, 46, 46);
+        this->offColor                  = Colour::fromRGB(56,  56,  56);
        
         
         setColour(PopupMenu::highlightedBackgroundColourId, this->onColor);
