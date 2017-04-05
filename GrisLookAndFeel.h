@@ -41,118 +41,122 @@
 class GrisLookAndFeel    : public LookAndFeel_V3 {
 private:
     
-    float m_fFontSize;
+    float fontSize;
 
-    Font  m_Font = Font(juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize));
+    Font  font = Font(juce::CustomTypeface::createSystemTypefaceFor(BinaryData::SinkinSans400Regular_otf, (size_t) BinaryData::SinkinSans400Regular_otfSize));
 
-    Colour m_BackGroundAndFieldColour;
-    Colour m_WinBackGroundAndFieldColour;
-    Colour m_LightColour, m_DarkColour, m_GreyColour, m_Oncolor, m_TextBgcolor,m_OncolorOver,m_OncolorDown,m_Offcolor;
+    Colour backGroundAndFieldColour, winBackGroundAndFieldColour;
+    Colour lightColour, darkColour, greyColour, editBgcolor;
+    Colour onColor, onColorOver, onColorDown, offColor;
     
 public:
     GrisLookAndFeel(){
-        m_BackGroundAndFieldColour   = Colours::darkgrey;
-        m_WinBackGroundAndFieldColour = Colour::fromRGB(46, 46, 46);
-        m_LightColour               = Colours::whitesmoke;
-        m_DarkColour                = Colours::black;
-        m_GreyColour                = Colours::grey;
         
-        m_Oncolor                   = Colour::fromRGB(255, 165, 25);
-        m_OncolorOver               = Colour::fromRGB(255, 184, 75);
-        m_OncolorDown               = Colour::fromRGB(222, 144, 22);
+        this->backGroundAndFieldColour      = Colours::darkgrey;
+        this->winBackGroundAndFieldColour   = Colour::fromRGB(46, 46, 46);
         
-        m_Offcolor                   = Colour::fromRGB(46, 46, 46);
+        this->lightColour               = Colours::whitesmoke;
+        this->darkColour                = Colours::black;
+        this->greyColour                = Colours::grey;
+        this->editBgcolor               = Colour::fromRGB(172, 172, 172);
+        
+        this->onColor                   = Colour::fromRGB(255, 165, 25);
+        this->onColorOver               = Colour::fromRGB(255, 184, 75);
+        this->onColorDown               = Colour::fromRGB(222, 144, 22);
+        this->offColor                  = Colour::fromRGB(46, 46, 46);
        
         
-        m_TextBgcolor               = Colour::fromRGB(172, 172, 172);
+        setColour(PopupMenu::highlightedBackgroundColourId, this->onColor);
+        setColour(TextEditor::backgroundColourId, this->editBgcolor);
+        setColour(TextEditor::highlightColourId, this->onColor);
+        setColour(TextEditor::shadowColourId, this->editBgcolor);
         
-        setColour(PopupMenu::highlightedBackgroundColourId, m_Oncolor);
-        setColour(TextEditor::backgroundColourId, m_TextBgcolor);
-        setColour(TextEditor::highlightColourId, m_Oncolor);
-        setColour(TextEditor::shadowColourId, m_TextBgcolor);
+        setColour(TextButton::buttonColourId, this->editBgcolor);
         
+        setColour(ComboBox::backgroundColourId, this->editBgcolor);
+        setColour(ComboBox::outlineColourId, this->editBgcolor);
         
-        setColour(ComboBox::backgroundColourId, m_TextBgcolor);
-        setColour(ComboBox::outlineColourId, m_TextBgcolor);
-        
-        setColour(Slider::thumbColourId, m_LightColour);
-        setColour(Slider::rotarySliderFillColourId, m_Oncolor);
-        setColour(Slider::trackColourId, m_DarkColour);
-        setColour(Slider::textBoxBackgroundColourId, m_TextBgcolor);
+        setColour(Slider::thumbColourId, this->lightColour);
+        setColour(Slider::rotarySliderFillColourId, this->onColor);
+        setColour(Slider::trackColourId, this->darkColour);
+        setColour(Slider::textBoxBackgroundColourId, this->editBgcolor);
         setColour(Slider::textBoxOutlineColourId, Colours::transparentBlack);
         
-        setColour(TooltipWindow::ColourIds::backgroundColourId,m_BackGroundAndFieldColour.withBrightness(0.8));
-        setColour(TooltipWindow::ColourIds::outlineColourId, m_BackGroundAndFieldColour.withBrightness(0.8));
+        setColour(TooltipWindow::ColourIds::backgroundColourId,this->backGroundAndFieldColour.withBrightness(0.8));
+        setColour(TooltipWindow::ColourIds::outlineColourId, this->backGroundAndFieldColour.withBrightness(0.8));
+        
+        setColour(AlertWindow::backgroundColourId, this->winBackGroundAndFieldColour);
+        setColour(AlertWindow::outlineColourId, this->winBackGroundAndFieldColour);
+        setColour(AlertWindow::textColourId, this->lightColour);
         
 #if WIN32
-        m_fFontSize = 18.f;
+        this->fontSize = 18.f;
 #else
-        m_fFontSize = 10.f;
+        this->fontSize = 10.f;
 #endif
-        m_Font.setHeight(m_fFontSize);
+        this->font.setHeight(this->fontSize);
        
     }
     
     Font getFont(){
-        return m_Font;
+        return this->font;
     }
     Font getLabelFont (Label & label) override{
-        return m_Font;
+        return this->font;
     }
     Font getComboBoxFont (ComboBox & comboBox) override{
-        return m_Font;
+        return this->font;
     }
     Font getTextButtonFont (TextButton &, int buttonHeight) override{
-        return m_Font;
+        return this->font;
     }
     Font getMenuBarFont	(MenuBarComponent &, int itemIndex, const String & itemText) override{
-        return m_Font;
+        return this->font;
     }
     
     Colour getWinBackgroundColour(){
-        return m_WinBackGroundAndFieldColour;
+        return this->winBackGroundAndFieldColour;
     }
 
     Colour getBackgroundColour(){
-        return m_BackGroundAndFieldColour;
+        return this->backGroundAndFieldColour;
     }
     
     Colour getFieldColour(){
-        return m_BackGroundAndFieldColour;
+        return this->backGroundAndFieldColour;
     }
     
     Colour getFontColour(){
-        return m_LightColour;
+        return this->lightColour;
     }
     
     Colour getScrollBarColour(){
-        return m_GreyColour;
+        return this->greyColour;
     }
     
     Colour getDarkColour(){
-        return m_DarkColour;
+        return this->darkColour;
     }
     
     Colour getLightColour(){
-        return m_LightColour;
+        return this->lightColour;
     }
     
     Colour getOnColour(){
-        return m_Oncolor;
+        return this->onColor;
     }
     Colour getOffColour(){
-        return m_Offcolor;
+        return this->offColor;
     }
     //https://github.com/audioplastic/Juce-look-and-feel-examples/blob/master/JuceLibraryCode/modules/juce_gui_basics/lookandfeel/juce_LookAndFeel.cpp
     
     void drawComboBox(Graphics& g,int width, int height,bool isButtonDown,int buttonX,int buttonY,int buttonW,int buttonH,ComboBox & box) override
     {
-        box.setColour(ColourSelector::backgroundColourId, m_Oncolor);
+        box.setColour(ColourSelector::backgroundColourId, this->onColor);
     
-
-        g.fillAll (m_TextBgcolor);//box.findColour (ComboBox::backgroundColourId))
+        g.fillAll (this->editBgcolor);//box.findColour (ComboBox::backgroundColourId))
         
-        const Colour buttonColour (m_DarkColour);//box.findColour (ComboBox::buttonColourId)
+        const Colour buttonColour (this->darkColour);//box.findColour (ComboBox::buttonColourId)
         const float arrowX = 0.3f;
         const float arrowH = 0.2f;
         
@@ -165,7 +169,7 @@ public:
                        buttonX + buttonW * (1.0f - arrowX), buttonY + buttonH * 0.55f,
                        buttonX + buttonW * arrowX,          buttonY + buttonH * 0.55f);
         
-        g.setColour (m_DarkColour.withMultipliedAlpha (box.isEnabled() ? 1.0f : 0.3f));//box.findColour (ComboBox::arrowColourId)
+        g.setColour (this->darkColour.withMultipliedAlpha (box.isEnabled() ? 1.0f : 0.3f));//box.findColour (ComboBox::arrowColourId)
         g.fillPath (p);
     }
     
@@ -176,7 +180,7 @@ public:
         Path p;
         p.addEllipse (x + halfThickness, y + halfThickness, diameter - outlineThickness, diameter - outlineThickness);
         
-        const DropShadow ds (m_DarkColour, 1, Point<int> (0, 0));
+        const DropShadow ds (this->darkColour, 1, Point<int> (0, 0));
         ds.drawForPath (g, p);
         
         g.setColour (colour);
@@ -195,16 +199,15 @@ public:
         const float halfThickness = lineThickness * 0.5f;
         Path outline;
         outline.addRectangle(0.5f + halfThickness, 0.5f + halfThickness, width - lineThickness, height - lineThickness);
-        g.setColour (m_TextBgcolor);
+        g.setColour (button.findColour(TextButton::buttonColourId));
         if (isButtonDown || isMouseOverButton){
-            g.setColour (m_OncolorOver);
+            g.setColour (this->onColorOver);
         }
         if ( button.getToggleState()) {
-            g.setColour (m_Oncolor);//outlineColour
-
+            g.setColour (this->onColor);//outlineColour
         }
         if(button.isEnabled() && button.isMouseButtonDown()){
-            g.setColour (m_OncolorDown);
+            g.setColour (this->onColorDown);
         }
         g.fillPath (outline);
     }
@@ -215,29 +218,29 @@ public:
         const Rectangle<float> r (x, y + (h - boxSize) * 0.5f, boxSize, boxSize);
 
         if (ticked) {
-            Colour colour = m_Oncolor;
+            Colour colour = this->onColor;
             
             if(component.isMouseOver()){
-                colour = m_OncolorOver;
+                colour = this->onColorOver;
             }
             
             if(!component.isEnabled()){
-                colour = m_Oncolor.withBrightness(0.3f);
+                colour = this->onColor.withBrightness(0.3f);
             }
             g.setColour (colour);
             g.fillRect (r);
 
         }else{
-            Colour colour = m_Offcolor;
+            Colour colour = this->offColor;
             if(!component.isEnabled()){
-                colour = m_Offcolor.withBrightness(0.3f);
+                colour = this->offColor.withBrightness(0.3f);
             }
             g.setColour (colour);
             g.fillRect (r);
         }
         
         if(component.isEnabled() && component.isMouseButtonDown()){
-            g.setColour (m_OncolorDown);
+            g.setColour (this->onColorDown);
             g.fillRect (r);
         }
     }
@@ -257,18 +260,18 @@ public:
         const Rectangle<float> r (kx - (sliderRadius/2.0f), ky- sliderRadius , 6, height*2.0f);
 
         if(slider.isEnabled()){
-            Colour colour = m_Oncolor;
+            Colour colour = this->onColor;
             
             if(slider.isMouseOver()){
-                colour = m_OncolorOver;
+                colour = this->onColorOver;
             }
             if(slider.isMouseButtonDown()){
-                colour = m_OncolorDown;
+                colour = this->onColorDown;
             }
             g.setColour (colour);
             g.fillRect (r);
         }else{
-            g.setColour (m_Offcolor);
+            g.setColour (this->offColor);
             g.fillRect (r);
         }
         
@@ -303,7 +306,7 @@ public:
             g.setColour (slider.findColour (Slider::trackColourId));
             g.fillPath (off);
         }else{
-            g.setColour (m_Offcolor);
+            g.setColour (this->offColor);
             g.fillPath (on);
             g.fillPath (off);
         }
@@ -311,14 +314,14 @@ public:
     }
     
     void fillTextEditorBackground(Graphics& g, int width, int height, TextEditor& t) override {
-        g.setColour(m_TextBgcolor);
+        g.setColour(this->editBgcolor);
         g.fillAll();
     }
     
     void drawTextEditorOutline(Graphics& g, int width, int height, TextEditor& t) override {
         if(t.hasKeyboardFocus(true))
         {
-            g.setColour(m_Oncolor);
+            g.setColour(this->onColor);
             g.drawRect (0, 0, width, height);
         }
         
@@ -331,29 +334,45 @@ public:
             g.setColour (button.findColour (TextEditor::focusedOutlineColourId));
             //g.drawRect (0, 0, button.getWidth(), button.getHeight());
         }
-        
-        float fontSize = jmin (15.0f, button.getHeight() * 0.75f);
-        const float tickWidth = fontSize * 1.1f;
-        
-        drawTickBox (g, button, 4.0f, (button.getHeight() - tickWidth) * 0.5f,
-                     tickWidth, tickWidth,
-                     button.getToggleState(),
-                     button.isEnabled(),
-                     isMouseOverButton,
-                     isButtonDown);
-        
-        g.setColour(button.findColour (ToggleButton::textColourId));
-        g.setFont(m_Font);
-        
-        if (! button.isEnabled())
-            g.setOpacity (0.5f);
-        
-        const int textX = (int) tickWidth + 5;
-        
-        g.drawFittedText (button.getButtonText(),
-                          textX, 0,
-                          button.getWidth() - textX - 2, button.getHeight(),
-                          Justification::centredLeft, 10);
+
+        if(button.getButtonText().length()==1){
+            drawTickBox (g, button, 0, 0, button.getWidth(), button.getHeight(),
+                         button.getToggleState(), button.isEnabled(),isMouseOverButton,isButtonDown);
+            g.setColour(button.findColour (ToggleButton::textColourId));
+            g.setFont(this->font);
+            
+            if (! button.isEnabled())
+                g.setOpacity (0.5f);
+                
+            
+            g.drawFittedText (button.getButtonText(),-2, 1,button.getWidth() , button.getHeight(),
+                              Justification::centred, 10);
+            
+            
+        }else{
+            float fontSize = jmin (15.0f, button.getHeight() * 0.75f);
+            const float tickWidth = fontSize * 1.1f;
+            
+            drawTickBox (g, button, 4.0f, (button.getHeight() - tickWidth) * 0.5f,
+                         tickWidth, tickWidth,
+                         button.getToggleState(),
+                         button.isEnabled(),
+                         isMouseOverButton,
+                         isButtonDown);
+            
+            g.setColour(button.findColour (ToggleButton::textColourId));
+            g.setFont(this->font);
+            
+            if (! button.isEnabled())
+                g.setOpacity (0.5f);
+                
+                const int textX = (int) tickWidth + 5;
+            
+            g.drawFittedText (button.getButtonText(),
+                              textX, 0,
+                              button.getWidth() - (textX-5) , button.getHeight(),
+                              Justification::centredLeft, 10);
+        }
     }
     
     void drawTabButton (TabBarButton& button, Graphics& g, bool isMouseOver, bool isMouseDown) override{
@@ -373,7 +392,7 @@ public:
         
         g.fillRect (activeArea);
         
-        g.setColour (m_WinBackGroundAndFieldColour);
+        g.setColour (this->winBackGroundAndFieldColour);
         
         Rectangle<int> r (activeArea);
         if (o != TabbedButtonBar::TabsAtTop)      g.fillRect (r.removeFromBottom (1));
@@ -409,7 +428,7 @@ public:
         }
         
         g.fillRect (activeArea);
-        g.setColour (m_WinBackGroundAndFieldColour);
+        g.setColour (this->winBackGroundAndFieldColour);
         
         Rectangle<int> r (activeArea);
         const float alpha = button.isEnabled() ? ((isMouseOver || isMouseDown) ? 1.0f : 0.8f) : 0.3f;
@@ -434,7 +453,7 @@ public:
     
     void createTabTextLayout (const TabBarButton& button, float length, float depth, Colour colour, TextLayout& textLayout)
     {
-        Font font (m_Font);
+        Font font (this->font);
 #if WIN32
         font.setHeight(depth * 0.60f);
 #else
@@ -462,7 +481,7 @@ public:
 //        if (button.getTabbedButtonBar().isVertical())
 //            std::swap (length, depth);
 //        
-//        Font font (m_Font);
+//        Font font (this->font);
 //        font.setHeight(depth * 0.35f);
 //        font.setUnderline (button.hasKeyboardFocus (false));
 //        
@@ -503,35 +522,39 @@ public:
 
         
         //    //we don't use those, so far
-        //    void drawRotarySlider (Graphics& g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, Slider& slider) override {
-        //        const float radius = jmin (width / 2, height / 2) - 2.0f;
-        //        const float centreX = x + width * 0.5f;
-        //        const float centreY = y + height * 0.5f;
-        //        const float rx = centreX - radius;
-        //        const float ry = centreY - radius;
-        //        const float rw = radius * 2.0f;
-        //        const float angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
-        //        const bool isMouseOver = slider.isMouseOverOrDragging() && slider.isEnabled();
-        //
-        //        if (slider.isEnabled())
-        //            g.setColour (slider.findColour (Slider::rotarySliderFillColourId).withAlpha (isMouseOver ? 1.0f : 0.7f));
-        //        else
-        //            g.setColour (Colour (0x80808080));
-        //
-        //        {
-        //            Path filledArc;
-        //            filledArc.addPieSegment (rx, ry, rw, rw, rotaryStartAngle, angle, 0.0);
-        //            g.fillPath (filledArc);
-        //        }
-        //
-        //        {
-        //            const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
-        //            Path outlineArc;
-        //            outlineArc.addPieSegment (rx, ry, rw, rw, rotaryStartAngle, rotaryEndAngle, 0.0);
-        //            g.strokePath (outlineArc, PathStrokeType (lineThickness));
-        //        }
-        //    }
+    void drawRotarySlider (Graphics& g, int x, int y, int width, int height, float sliderPos,
+                           float rotaryStartAngle, float rotaryEndAngle, Slider& slider) override
+    {
+        const float radius = jmin (width / 2, height / 2) - 2.0f;
+        const float centreX = x + width * 0.5f;
+        const float centreY = (y + height * 0.5f)+6.0f;
+        const float rx = centreX - radius;
+        const float ry = centreY - radius;
+        const float rw = radius * 2.0f;
+        const float angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
+        const bool isMouseOver = slider.isMouseOverOrDragging() && slider.isEnabled();
+        
+        if (slider.isEnabled()){
+            //slider.findColour (Slider::rotarySliderFillColourId).withAlpha (isMouseOver ? 0.7f : 1.0f)
+            if(isMouseOver){
+                g.setColour (this->onColorOver);
+            }
+            else{
+                g.setColour (this->onColor);
+            }
+        }
+        else{
+                g.setColour (this->offColor);
+        }
+        Path filledArc;
+        filledArc.addPieSegment (rx, ry, rw, rw, rotaryStartAngle, angle, 0.0);
+        g.fillPath (filledArc);
+        const float lineThickness = jmin (15.0f, jmin (width, height) * 0.45f) * 0.1f;
+        Path outlineArc;
+        outlineArc.addPieSegment (rx, ry, rw, rw, rotaryStartAngle, rotaryEndAngle, 0.0);
+        g.strokePath (outlineArc, PathStrokeType (lineThickness));
+    }
 };
-        
+
 #endif
-        
+
