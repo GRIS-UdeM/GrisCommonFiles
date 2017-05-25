@@ -47,7 +47,7 @@ private:
 
     Colour backGroundAndFieldColour, winBackGroundAndFieldColour;
     Colour lightColour, darkColour, greyColour, editBgcolor;
-    Colour onColor, onColorOver, onColorDown, offColor;
+    Colour onColor, onColorOver, onColorDown, offColor, greenColor, redColor;
     
 public:
     GrisLookAndFeel(){
@@ -65,6 +65,8 @@ public:
         this->onColorDown               = Colour::fromRGB(222, 144, 22);
         this->offColor                  = Colour::fromRGB(56,  56,  56);
        
+        this->greenColor                = Colour::fromRGB(56,  156,  56);
+        this->redColor                  = Colour::fromRGB(220,  48,  35);
         
         setColour(PopupMenu::highlightedBackgroundColourId, this->onColor);
         setColour(TextEditor::backgroundColourId, this->editBgcolor);
@@ -86,7 +88,7 @@ public:
         setColour(TooltipWindow::ColourIds::outlineColourId, this->backGroundAndFieldColour.withBrightness(0.8));
         
         setColour(AlertWindow::backgroundColourId, this->winBackGroundAndFieldColour);
-        setColour(AlertWindow::outlineColourId, this->winBackGroundAndFieldColour);
+        setColour(AlertWindow::outlineColourId, this->onColor);
         setColour(AlertWindow::textColourId, this->lightColour);
         
 #if WIN32
@@ -148,6 +150,13 @@ public:
     Colour getOffColour(){
         return this->offColor;
     }
+    Colour getGreenColour(){
+        return this->greenColor;
+    }
+    Colour getRedColour(){
+        return this->redColor;
+    }
+    
     //https://github.com/audioplastic/Juce-look-and-feel-examples/blob/master/JuceLibraryCode/modules/juce_gui_basics/lookandfeel/juce_LookAndFeel.cpp
     
     void drawComboBox(Graphics& g,int width, int height,bool isButtonDown,int buttonX,int buttonY,int buttonW,int buttonH,ComboBox & box) override
